@@ -1,5 +1,7 @@
 # $Id$
 
+# TODO: if Windows, alias open='cmd /c start'
+
 # PS1="%m%# "
 PS1='%(#.%B;%b.;) '
 if [ -n "$WINDOW" ] ; then
