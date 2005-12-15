@@ -1,0 +1,118 @@
+# .muttrc -- Alex Hioreanu
+source ~/.muttrc-gpg
+set folder="imaps://ahiorean@imap.uchicago.edu/"
+mailboxes "imaps://ahiorean@imap.uchicago.edu/INBOX"
+lists cs230@cs.uchicago.edu freebsd-questions@freebsd.org
+folder-hook cs230 set sort=threads
+folder-hook freebsd-questions set sort=threads
+set include=yes
+bind pager \' previous-line
+bind index N search-opposite
+# set alias_file=~/.mutt.aliases
+# source ~/.mutt.aliases
+unset arrow_cursor
+set ascii_chars
+# set mime_forward
+# set attribution="< %n <%a> [%(%b %d %Y)]:
+set attribution="< %n <%a> [%(%b %d %Y)]:
+set noconfirmcreate
+set copy
+#set index_format="%-17.17n %> %s
+#set index_format="%Z %-17.17n %-.`echo $((${COLUMNS} - 34))`s %> %[%m-%d %H:%M]"
+set index_format="%Z %-17.17n %-.46s %> %[%m-%d %H:%M]"
+set pager_stop
+unset reply_to
+ignore received content- type- message-id mime-version status x-status
+ignore X-MIMETrack Old-Subject X-Face X-Dispatcher X-MS-Has-Attach
+ignore X-MS-TNEF-Correlator thread-index Thread-Topic
+ignore X-DAMS-Appraisal X-Accept-Language mailing-list DomainKey-Signature
+ignore x-uchicago-pmx-id x-uchicago-spam x-enigmail-version x-no-archive
+ignore x-enigmail-supports x-scort-mailscanner x-scort-mailscanner-spamcheck
+ignore x-uchicago-queueid x-uchicago-pm-tier x-virus-scanned x-pmx-version
+ignore x-virus-status return-path lines references sender x-sender
+ignore X-UIDL X-PH In-Reply-To X-MIME-Autoconverted Errors-To
+ignore X-BeenThere X-Loop X-Mailman-Version List-Help List-Post
+ignore List-Subscribe List-Id List-Unsubscribe List-Archive
+ignore Path X-MSMail-Priority X-MimeOLE X-Trace NNTP-Posting-Date
+ignore X-SessionID X-Hash-Info X-Hash Xref Precedence X-Authentication-Warning
+ignore X-Google-Sender-Auth X-Mailman-Trace Disposition-Notification-To
+set fast_reply=yes
+unset fcc_attach
+# set pop_host="nsit-popmail.uchicago.edu"
+# set pop_user="ahiorean"
+# set pop_delete
+unset use_from
+set realname="Alex Hioreanu"
+my_hdr Return-Path: <hioreanu@gmail.com>
+my_hdr Return-Path: <ach@uchicago.edu>
+my_hdr From: ach@uchicago.edu
+set editor="vi"
+set pager_context=0
+set pager_stop
+set recall=no
+set status_on_top
+set move=no
+#unset markers
+set smart_wrap
+unset postpone
+unset help
+set print_command="enscript"
+#macro index p ":my_hdr From: hioreanu@uchicago.edu\n:set signature=~/.sig-per\n"
+#macro pager p ":my_hdr From: hioreanu@uchicago.edu\n:set signature=~/.sig-per\n"
+#macro index b ":my_hdr From: ach@uchicago.edu\n:unset signature\n"
+#macro pager b ":my_hdr From: ach@uchicago.edu\n:unset signature\n"
+#macro index b ":my_hdr From: ach@uchicago.edu\n:set signature=~/.sig-biz\n"
+#macro pager b ":my_hdr From: ach@uchicago.edu\n:set signature=~/.sig-biz\n"
+
+macro index G ":toggle mime_forward\n"
+macro pager G ":toggle mime_forward\n"
+
+bind index a flag-message
+bind pager a flag-message
+bind index V last-entry
+bind pager b bounce-message
+bind index b bounce-message
+
+#macro compose S "Fgpg -a --clearsign --no-greeting --no-secmem-warning\ny"
+#macro compose T "Fpbpgp\ny"
+#macro index S "s=cs230\n"
+#set pgp_default_version="gpg"
+#
+# colors:  white, green, magenta, black, blue, cyan, yellow, red, default
+#
+# 
+#color index default        default ~R
+
+# color index brightred      default "~U ~h '.*[Pp]riority: ([12]|[hH]igh)'"
+color index brightred      default "~U ~h '.*[Pp]riority: ([12]|[hH]igh)'"
+color index brightmagenta  default "~F"
+#color index brightdefault  default "~p"
+#color index default       default ~R
+#color index brightdefault default ~Q
+#color index brightgreen   default ~U
+#color index brightblue    default "~U ~C '(ginger|www)\.rh\.uchicago\.edu$'"
+#color index brightred     default "~h '.*X-ACH:'"
+#color index brightcyan    default ~D
+#
+# macro index|pager|... y '...'
+# set pgp_autosign
+# unmyhdr Reply-To:
+# unmyhdr From: 
+# myhdr Reply-To: aca@ginger.rh.uchicago.edu
+# myhdr From: aca@ginger.rh.uchicago.edu
+# mess /w status_format
+# set default_hook="~t %s | ~f %s"
+# set default_hook="~h %s"
+# set default_hook="~t %s | ~C %s"
+# send-hook . 'unmy_hdr From:'
+# send-hook . 'set signature=~/.signature-personal'
+# send-hook . 'my_hdr From: a-hioreanu@uchicago.edu'
+# send-hook @(ginger|www)\.rh 'set signature=~/.signature-business'
+# send-hook @(ginger|www)\.rh 'my_hdr From: aca@ginger.rh.uchicago.edu'
+
+set reverse_name
+# set alternates="(.*iorean.*@.*uchicago)|a(ca|mis)@.*rh\.uchicago"
+# set alternates="(ahiorean|ach)@(midway\.)?uchicago.edu
+#send-hook @securityfocus.com \
+#"my_hdr From: Alex Hioreanu <hioreanu+bugtraq@uchicago.edu> \
+#;set signature=''"

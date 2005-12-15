@@ -1,0 +1,82 @@
+#if HEIGHT == 768
+#define GEOMETRY 85x28+0+0
+#elif HEIGHT == 864
+#define GEOMETRY 95x32+0+0
+#elif HEIGHT == 1024
+#define GEOMETRY 106x38+0+0
+#else
+#define GEOMETRY 80x24+0+0
+#endif
+
+xscreensaver.timeout: 60
+xscreensaver.cycle: 0
+xscreensaver.lockTimeout: 1
+xscreensaver.passwdTimeout: 10
+xscreensaver.nice: 1
+xscreensaver.lock: True
+xscreensaver.lockVTs: True
+xscreensaver.verbose: False
+xscreensaver.timestamp: False
+xscreensaver.fade: True
+xscreensaver.unfade: False
+xscreensaver.fadeSeconds: 3
+xscreensaver.fadeTicks: 20
+xscreensaver.splash: False
+xscreensaver.splashDuration: 0
+xscreensaver.captureStderr: True
+xscreensaver.installColormap: True
+xscreensaver.programs: /usr/X11R6/bin/phosphor -scale 1
+
+emacs.pointerColor: white
+emacs.cursorColor: #909090
+emacs.background: #000022
+emacs.foreground: #909090
+emacs.borderWidth: 0
+emacs.internalBorder: 0
+emacs.font: 12x26-latin2
+emacs.geometry: GEOMETRY
+
+xterm.VT100.background: #000022
+xterm.VT100.foreground: #909090
+!xterm.VT100.font: 12x26-latin2
+!xterm.VT100.faceName: arial mono
+!xterm.VT100.faceSize: 19
+!xterm.VT100.geometry: GEOMETRY
+xterm.VT100.scrollBar: false
+xterm.VT100.visualBell: true
+xterm.VT100.pointerShape: left_ptr
+xterm.VT100.internalBorder: 0
+!xterm.VT100.popOnBell: true
+xterm.VT100.scrollKey: true
+
+Netscape*blinkingEnabled: False
+Netscape*dontSaveGeometryPrefs: True
+Netscape*ignoreGeometryPrefs: True
+Netscape*noAboutSplash: True
+Netscape*dontForceWindowStacking: True
+Netscape*dragInitiatorProtocolStyle:   XmDRAG_NONE
+Netscape*dragReceiverProtocolStyle:    XmDRAG_NONE
+Netscape*nsMotifFSBHacks: True
+Netscape*saveHistoryInterval: 20
+Netscape*useStderrDialog: False
+Netscape*useStdoutDialog: False
+Netscape*globalTranslations: #override \
+  <Btn4Down>: LineUp() LineUp() LineUp() LineUp() \n\
+  <Btn5Down>: LineDown() LineDown() LineDown() LineDown()   \n\
+  Meta ~Ctrl<Key>K: xfeDoCommand(addBookmark) \n\
+  Alt ~Ctrl<Key>K: xfeDoCommand(addBookmark)  \n\
+  Meta ~Ctrl  Shift<Key>n: xfeDoCommand(newBlank) \n\
+  Alt ~Ctrl  Shift<Key>n: xfeDoCommand(newBlank) \n\
+  Meta ~Ctrl<Key>Q: xfeDoCommand(exit) \n\
+  Alt ~Ctrl<Key>Q: xfeDoCommand(exit) \n\
+  Meta ~Ctrl<Key>W: xfeDoCommand(close) \n\
+  Alt ~Ctrl<Key>W: xfeDoCommand(close) \n\
+  Meta ~Ctrl<Key>S: xfeDoCommand(saveAs) \n\
+  Alt ~Ctrl<Key>S: xfeDoCommand(saveAs) \n
+
+Netscape*logo.animationInterval: 1000000
+Netscape*logo.shadowThickness: 0
+Netscape*documentFonts.xResolution*iso-8859-1:  100
+Netscape*documentFonts.yResolution*iso-8859-1:  100
+Netscape*documentFonts.xResolution*iso-8859-2:  100
+Netscape*documentFonts.yResolution*iso-8859-2:  100
