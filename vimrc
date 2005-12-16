@@ -4,6 +4,8 @@ set ruler
 set notitle
 set clipboard=exclude:.*
 
+map! <f1> <esc>
+
 set nocompatible
 set backspace=indent,eol,start
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
