@@ -48,21 +48,13 @@ SAVEHIST=3000
 unset MAILCHECK
 
 # /xc/doc/hardcopy/xterm/ctlseqs.PS.gz
-if [[ -t 1 ]] ; then
+if [ -t 1 ] ; then
 	case $TERM in
 		vt100|*xterm*|rxvt|cygwin)
 			precmd() { print -Pn "\e]2;%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a" } ;;
 		sun-cmd)
 			precmd() { print -Pn "\e]1%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" } ;;
 	esac
-fi
-
-if [ "`uname -s`" = "SunOS" ] ; then
-	if [ "$TERM" = "linux" ] ; then TERM=vt220 ; fi
-	if [ "`uname -r | sed 's/\..*//'`" -gt 4 ] ; then
-		if [ "$TERM" = "cygwin" ] ; then TERM=xtermc ; fi
-		if [ "$TERM" = "xterm-color" ] ; then TERM=xtermc ; fi
-	fi
 fi
 
 EDITOR=vi
@@ -72,8 +64,8 @@ PAGER=less
 CVS_RSH=ssh
 CVSEDITOR=vi
 
-if [ -z "$CVSROOT" ] ; then CVSROOT="$HOME/CVSROOT" fi
-if [ -z "$PATH" ] ; then PATH="/bin:/usr/bin" fi
+[ -z "$CVSROOT" ] && CVSROOT="$HOME/CVSROOT"
+[ -z "$PATH" ] && PATH="/bin:/usr/bin"
 if [ -z "$MANPATH" ] ; then
 	MANPATH=/opt/man:/usr/man:/usr/local/man:/usr/X11R6/man:
 	MANPATH=$MANPATH:/usr/openwin/man:/usr/share/man:/opt/SUNWspro/man
@@ -83,10 +75,8 @@ pathdel() {
 	PATH=`echo "$PATH" | sed 's/:/\n/g' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
 }
 pathadd() {
-	if echo "$PATH" | sed "s/:/\n/g" | fgrep -x "$1" > /dev/null 2>&1
-		then return
-	fi
-	if [ \! -d $1 ] ; then return ; fi
+	[ -d $1 ] || return
+	if echo "$PATH" | sed "s/:/\n/g" | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
 	case $2 in
 		"prepend") PATH="$1:$PATH" ;;
 		"append"|"") PATH="$PATH:$1" ;;
@@ -135,17 +125,30 @@ alias h='head -n $(($LINES - 1))'
 alias dt='date +%Y%m%dT%H%M%S'
 alias ds='date +%Y%m%d'
 
-if [ "`uname -s`" = "Darwin" ] ; then
-	export JAVA_HOME=/usr
-	if ps auxww | fgrep X11.app > /dev/null 2>&1 ; then
-		export DISPLAY=:0.0
-		pathadd /usr/X11R6/bin append
-	fi
-fi
+case "`uname -s`" in
+	Darwin)
+		export JAVA_HOME=/usr
+		if ps auxww | fgrep X11.app > /dev/null 2>&1 ; then
+			export DISPLAY=:0.0
+			pathadd /usr/X11R6/bin append
+		fi
+		;;
+	CYGWIN*)
+		alias open='cmd /c start'
+		;;
+	SunOS)
+		if [ "$TERM" = "linux" ]
+			then TERM=vt220
+		elif [ "`uname -r | sed 's/\..*//'`" -gt 4 ] ; then
+			if [ "$TERM" = "cygwin" ] ; then
+				TERM=xtermc
+			elif [ "$TERM" = "xterm-color" ] ; then
+				TERM=xtermc
+			fi
+		fi
+		;;
+esac
 
-if [[ "`uname -s`" = CYGWIN* ]] ; then
-	alias open='cmd /c start'
-fi
 
 randsort() {
 	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
@@ -209,4 +212,4 @@ else
 	umask 077
 fi
 
-if [ -e "$HOME/.zsh-local" ] ; then source "$HOME/.zsh-local" ; fi
+[ -e "$HOME/.zsh-local" ] && source "$HOME/.zsh-local"
