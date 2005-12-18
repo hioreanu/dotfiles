@@ -12,6 +12,7 @@ RPS1="#%m%S${WINDOWINDICATOR}%s %*"
 bindkey -me
 # bindkey '\e' vi-cmd-mode
 
+# for square:
 #if [ ! -z "$ZSH_VERSION" -a \
 #	"`echo $ZSH_VERSION | sed 's/\..*//'`" = 3 -a \
 #	"`echo $ZSH_VERSION | sed 's/.*\.//'`" -lt  -a \
@@ -71,38 +72,29 @@ PAGER=less
 CVS_RSH=ssh
 CVSEDITOR=vi
 
-if [ -z "$CVSROOT" ] ; then
-	CVSROOT="$HOME/CVSROOT"
-fi
-
-if [ -z $PATH ] ; then
-	PATH="/bin:/usr/bin"
-fi
-
-if [ -z $MANPATH ] ; then
+if [ -z "$CVSROOT" ] ; then CVSROOT="$HOME/CVSROOT" fi
+if [ -z "$PATH" ] ; then PATH="/bin:/usr/bin" fi
+if [ -z "$MANPATH" ] ; then
 	MANPATH=/opt/man:/usr/man:/usr/local/man:/usr/X11R6/man:
 	MANPATH=$MANPATH:/usr/openwin/man:/usr/share/man:/opt/SUNWspro/man
 fi
 
 pathdel() {
-	PATH=`echo $PATH | sed -e "s@\(.*\)\(\:\)$1\(\:\)\(.*\)@\1:\4@g" \
-	                       -e "s@^$1:@@" -e "s@:$1"'$@@'`
+	PATH=`echo "$PATH" | sed 's/:/\n/g' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
 }
 pathadd() {
-	if echo $PATH | fgrep "$1" > /dev/null 2>&1 ; then
-		:
-	else
-		if [ -d $1 ] ; then 
-			case $2 in
-				"append") PATH=$PATH:$1 ;;
-				"prepend") PATH=$1:$PATH ;;
-				*) echo fixme
-			esac
-		fi
+	if echo "$PATH" | sed "s/:/\n/g" | fgrep -x "$1" > /dev/null 2>&1
+		then return
 	fi
+	if [ \! -d $1 ] ; then return ; fi
+	case $2 in
+		"prepend") PATH="$1:$PATH" ;;
+		"append"|"") PATH="$PATH:$1" ;;
+		*) echo "usage: pathadd <component> [ prepend | append ]"
+	esac
 }
 
-pathdel '\.'
+pathdel '.'
 
 for i in /opt/*/bin ; do pathadd $i "append" ; done
 for i in /usr/local/*/bin ; do pathadd $i "prepend" ; done
@@ -124,18 +116,11 @@ fi
 pathdel "$HOME/bin"
 pathadd "$HOME/bin" "prepend"
 
-if [ "`uname -s`" = "Darwin" ] ; then
-	export JAVA_HOME=/usr
-	if ps auxww | fgrep X11.app > /dev/null 2>&1 ; then
-		export DISPLAY=:0.0
-		pathadd /usr/X11R6/bin append
-	fi
-fi
-
 unhash -am '*'
 alias jobs="builtin jobs -l"
 alias jbos="builtin jobs -l"
 alias wpd=pwd
+alias pdw=pwd
 alias maek=make
 alias amke=make
 alias amek=make
@@ -149,6 +134,18 @@ alias gv='gv -antialias -noresize'
 alias h='head -n $(($LINES - 1))'
 alias dt='date +%Y%m%dT%H%M%S'
 alias ds='date +%Y%m%d'
+
+if [ "`uname -s`" = "Darwin" ] ; then
+	export JAVA_HOME=/usr
+	if ps auxww | fgrep X11.app > /dev/null 2>&1 ; then
+		export DISPLAY=:0.0
+		pathadd /usr/X11R6/bin append
+	fi
+fi
+
+if [[ "`uname -s`" = CYGWIN* ]] ; then
+	alias open='cmd /c start'
+fi
 
 randsort() {
 	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
