@@ -1,8 +1,5 @@
 # $Id$
 
-# TODO: if Windows, alias open='cmd /c start'
-
-# PS1="%m%# "
 PS1='%(#.%B;%b.;) '
 if [ -n "$WINDOW" ] ; then
 	WINDOWINDICATOR="[$WINDOW]"
@@ -10,12 +7,6 @@ fi
 RPS1="#%m%S${WINDOWINDICATOR}%s %*"
 
 bindkey -me
-# bindkey '\e' vi-cmd-mode
-
-# for square:
-#if [ ! -z "$ZSH_VERSION" -a \
-#	"`echo $ZSH_VERSION | sed 's/\..*//'`" = 3 -a \
-#	"`echo $ZSH_VERSION | sed 's/.*\.//'`" -lt  -a \
 
 # do not execute /etc/zlogout
 setopt NO_GLOBAL_RCS
@@ -154,12 +145,6 @@ randsort() {
 	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
 	         print sort {rand() <=> rand()} <STDIN>;'
 }
-ssh2pubkeysetup() {
-	ssh "$@" \
-		'mkdir $HOME/.ssh2 ; echo Key ach0.ssh.com-dss > $HOME/.ssh2/authorization ; cat > $HOME/.ssh2/ach0.ssh.com-dss' \
-		< $HOME/.ssh2/ach0.ssh.com-dss
-}
-
 audioplay=mpg123
 playm3u() {
 	randsort < "$1" | while read i ; do "$audioplay" "$i" ; done
@@ -200,9 +185,6 @@ texwc() {
 }
 tcpgrep() {
 	tcpdump -p -X -n -q -s 8192 dst port $1 or src port $1
-}
-zero() {
-	dd if=/dev/zero "of=$1" bs=1 count=`ls -l "$1" | awk '{print $5}'`
 }
 
 if [ -d ~/nsmail ] ; then rm -rf ~/nsmail ; fi
