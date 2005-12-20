@@ -1,4 +1,5 @@
 #!/bin/sh
+# $Id$
 
 arg="$1"
 if [ $# -ne 1 -o "$arg" != "on" -a "$arg" != "off" ] ; then
