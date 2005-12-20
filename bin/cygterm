@@ -1,24 +1,23 @@
 #!/bin/bash
 # $Id$
 
-c=`/bin/date +%S | /bin/sed s/^[0-9]//`
-case $c
+case $RANDOM
 in
-	0) color=000020 ;;
-	1) color=001020 ;;
-	2) color=001030 ;;
-	3) color=002020 ;;
-	4) color=002030 ;;
-	5) color=101020 ;;
-	6) color=101030 ;;
-	7) color=102020 ;;
-	8) color=102030 ;;
-	9) color=202030 ;;
+	*0) color=000020 ;;
+	*1) color=001020 ;;
+	*2) color=001030 ;;
+	*3) color=002020 ;;
+	*4) color=002030 ;;
+	*5) color=101020 ;;
+	*6) color=101030 ;;
+	*7) color=102020 ;;
+	*8) color=102030 ;;
+	*9) color=202030 ;;
 esac
 
 export PATH="$PATH:/bin:/usr/X11R6/bin"
 if /bin/ps auxww | /bin/fgrep XWin > /dev/null 2>&1 ; then : ; else
-	XWin -multiwindow -clipboard -silent-dup-error > /dev/null 2>&1&
+	XWin -multiwindow -clipboard -silent-dup-error -emulate3buttons > /dev/null 2>&1&
 fi
 
 export DISPLAY=:0.0
