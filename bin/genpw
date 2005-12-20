@@ -1,0 +1,170 @@
+#!/usr/bin/perl
+# $Id$
+
+use strict;
+BEGIN { $^W = 1 }
+
+# only works on systems with ascii, but I've never touched an
+# IBM mainframe anyway
+
+srand(time() ^ ($$ + ($$ << 15)));
+
+my %alpha_hash = (
+	'a' => 'alpha',
+	'b' => 'bravo',
+	'c' => 'charlie',
+	'd' => 'delta',
+	'e' => 'echo',
+	'f' => 'foxtrot',
+	'g' => 'golf',
+	'h' => 'hotel',
+	'i' => 'india',
+	'j' => 'juliet',
+	'k' => 'kilo',
+	'l' => 'lima',
+	'm' => 'mike',
+	'n' => 'november',
+	'o' => 'oscar',
+	'p' => 'papa',
+	'q' => 'quebec',
+	'r' => 'romeo',
+	's' => 'sierra',
+	't' => 'tango',
+	'u' => 'uniform',
+	'v' => 'victor',
+	'w' => 'whiskey',
+	'x' => 'xray',
+	'y' => 'yankee',
+	'z' => 'zulu',
+	'A' => 'ALPHA',
+	'B' => 'BRAVO',
+	'C' => 'CHARLIE',
+	'D' => 'DELTA',
+	'E' => 'ECHO',
+	'F' => 'FOXTROT',
+	'G' => 'GOLF',
+	'H' => 'HOTEL',
+	'I' => 'INDIA',
+	'J' => 'JULIET',
+	'K' => 'KILO',
+	'L' => 'LIMA',
+	'M' => 'MIKE',
+	'N' => 'NOVEMBER',
+	'O' => 'OSCAR',
+	'P' => 'PAPA',
+	'Q' => 'QUEBEC',
+	'R' => 'ROMEO',
+	'S' => 'SIERRA',
+	'T' => 'TANGO',
+	'U' => 'UNIFORM',
+	'V' => 'VICTOR',
+	'W' => 'WHISKEY',
+	'X' => 'XRAY',
+	'Y' => 'YANKEE',
+	'Z' => 'ZULU',
+	'1' => 'one',
+	'2' => 'two',
+	'3' => 'three',
+	'4' => 'four',
+	'5' => 'five',
+	'6' => 'six',
+	'7' => 'seven',
+	'8' => 'eight',
+	'9' => 'nine',
+	'0' => 'zero',
+	'!' => 'exclamationpoint',
+	'@' => 'at',
+	'#' => 'hash',
+	'$' => 'dollar',
+	'%' => 'percent',
+	'^' => 'caret',
+	'&' => 'ampersand',
+	'*' => 'star',
+	'(' => 'leftparenthesis',
+	')' => 'rightparenthesis',
+	'-' => 'dash',
+	'_' => 'underscore',
+	'+' => 'plus',
+	'=' => 'equals',
+	'|' => 'pipe',
+	'\\' => 'backslash',
+	'~' => 'tilde',
+	'`' => 'backtick',
+	'[' => 'leftbracket',
+	']' => 'rightbracket',
+	'{' => 'leftbrace',
+	'}' => 'rightbrace',
+	';' => 'semicolon',
+	':' => 'colon',
+	'"' => 'doublequote',
+	"'" => 'singlequote',
+	',' => 'comma',
+	'<' => 'lessthan',
+	'.' => 'dot',
+	'>' => 'greaterthan',
+	'?' => 'questionmark',
+	'/' => 'slash',
+	' ' => 'space',
+);
+
+if ($#ARGV > -1 && $ARGV[0] =~ /-/) {
+	print <<EOT;
+usage: $0 [MIN] [MAX] [MAXCLASSES]
+
+Spits out a random password between MIN and MAX characters long.
+Default MIN is 6, default MAX is 8, default MAXCLASSES is 4.
+EOT
+	exit(0);
+}
+
+my $minchars = 8;
+my $maxchars = 8;
+my $maxclasses = 4;
+if ($#ARGV > -1) {
+	$minchars = $ARGV[0];
+}
+if ($#ARGV > 0) {
+	$maxchars = $ARGV[1];
+}
+if ($#ARGV > 1) {
+	$maxclasses = $ARGV[2];
+}
+if ($minchars > $maxchars) {
+	$maxchars = $minchars;
+}
+
+local *RANDOM;
+my $have_devrandom = 1;
+open RANDOM, "/dev/random" or $have_devrandom = 0;
+
+my @output = ();
+my $chars = int($minchars + (rand ($maxchars - $minchars)));
+while ($#output + 1 < $chars) {
+	my $c;
+	if ($have_devrandom) {
+		read RANDOM, $c, 1 or die("read /dev/random: $!");
+		$c = chr(0x7F & (ord($c) + 32));
+	} else {
+		$c = chr(rand 128);
+	}
+	next if (ord($c) <= 32 or ord($c) == 127);
+	next if ($c eq "1" or $c eq "I" or $c eq "l" or $c eq "|" or $c eq "0" or $c eq "O" or $c eq "o" or $c eq "\\" or $c eq '`');
+	# print ord($c), " $c", "\n";
+	if ($maxclasses == 1) {
+		next if ($c !~ /[A-Z]/);
+	} elsif ($maxclasses == 2) {
+		next if ($c !~ /[A-Za-z]/);
+	} elsif ($maxclasses == 3) {
+		next if ($c !~ /[A-Za-z0-9]/);
+	}
+	push(@output, $c);
+}
+foreach (@output) {
+	print;
+}
+print "\n";
+foreach (@output) {
+	print $alpha_hash{$_};
+	print " ";
+}
+print "\n";

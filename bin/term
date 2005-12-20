@@ -1,0 +1,27 @@
+#!/bin/sh
+# $Id$
+
+c=`date +%S | sed s/^[0-9]//`
+case $c
+in
+	0) color=000020 ;;
+	1) color=001020 ;;
+	2) color=001030 ;;
+	3) color=002020 ;;
+	4) color=002030 ;;
+	5) color=101020 ;;
+	6) color=101030 ;;
+	7) color=102020 ;;
+	8) color=102030 ;;
+	9) color=202030 ;;
+esac
+
+exec xterm -tn xtermc -fa foo -xrm "xterm.VT100.background:#$color" "$@"
+
+num=`date +%S | sed s/^0//`
+r=$(($num / 16))0
+g=$(($num % 4))0
+b=20
+if [ $r -eq 30 ] ; then r=00 ; b=$(($b + 10)) ; fi
+if [ $g -eq 30 ] ; then g=20 ; b=$(($b + 10)) ; fi
+xterm -fa foo -xrm "xterm.VT100.background:#$r$g$b"

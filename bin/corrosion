@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+# $Id$
+
+BEGIN { $^W = 1 }
+use strict;
+
+local *CURL;
+open(CURL, "curl -s http://www.thisiscorrosion.com/Playlist.asp |") or die;
+local $/;
+my $page = <CURL>;
+close(CURL);
+my $songs = [];
+$page =~ /Currently playing track:.*?<font FACE="Arial, Helvetica" SIZE="2">(.*?)<\/font>/s;
+push @$songs, $1;
+$page =~ s/.*Last 9 tracks played:.*?<\/tr>//s;
+$page =~ s/<\/table>.*//s;
+foreach (split '<tr>', $page) {
+	/SIZE="2">(.*)<\/font>/;
+	push @$songs, $1 if $1;
+}
+print join("\n", @$songs), "\n";

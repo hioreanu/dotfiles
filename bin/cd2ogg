@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+# used briefly on ach0 before surrendering to iTunes and consumerism
+# $Id$
+import sys, os, string
+import CDDB, DiscID
+
+def quote(s):
+	return '"' + string.replace(string.replace(string.replace(s, '"', "\\\""), "/", "-"), "\\", "\\\\") + '"'
+
+cdrom = DiscID.open()
+discid = DiscID.disc_id(cdrom)
+(query_status, query_info) = CDDB.query(discid)
+if (query_status == 210 or query_status == 211):
+	query_info = query_info[0]
+elif (query_status != 200):
+	print "Could not get entry for " + discid
+	sys.exit(1)
+(read_status, read_info) = CDDB.read(query_info['category'], query_info['disc_id'])
+artist = string.strip(read_info['DTITLE'].split("/")[0])
+album = string.strip(read_info['DTITLE'].split("/")[1])
+for i in range(discid[1]):
+	track = read_info['TTITLE' + `i`]
+	cmd = ""
+	cmd += "cdparanoia -B " + `i+1` + ";"
+	cmd += "oggenc -q 9 -t " + quote(track)
+	cmd += " -a " + quote(artist)
+	cmd += " -l " + quote(album)
+	cmd += " -N " + `i+1`
+	cmd += " -o " + quote(artist + " - " + album + " [%02d] " % (i+1) + track + ".ogg")
+	cmd += " track%02d.cdda.wav" % (i+1)
+	print cmd
+	os.system(cmd)
