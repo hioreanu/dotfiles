@@ -1,0 +1,52 @@
+#!/bin/sh
+
+arg="$1"
+if [ $# -ne 1 -o "$arg" != "on" -a "$arg" != "off" ] ; then
+	echo "usage: $0 { on | off }";
+	exit 1
+fi
+
+requirepassword() {
+	osascript <<EOT
+-- gleaned mostly from:
+-- http://www.ditchnet.org/wp/2005/07/26/applescript-to-toggle-screensaver-security-access/
+tell application "System Preferences"
+	activate
+	set current pane to pane "Security"
+	tell application "System Events"
+		try
+			tell application process "System Preferences"
+				tell window "Security"
+						if (value of checkbox 1 is not equal to $1) then
+							click checkbox 1
+						end if
+				end tell
+			end tell
+			tell application "System Preferences" to close the first window
+		on error
+			tell application "System Preferences"
+				activate
+				set current pane to pane "com.apple.preference.universalaccess"
+				display dialog "UI element scripting is not enabled.  Check \"Enable access for assistive devices\""
+			end tell
+		end try
+	end tell
+end tell
+EOT
+}
+
+pid="`ps auxww | awk '/ScreenSaverEngin[e]/ { print $2 }'`"
+if [ "$arg" = "on" -a -z "$pid" ] ; then
+	echo "Turning on Macintosh screen saver"
+	requirepassword 1
+	osascript <<EOT
+tell application "ScreenSaverEngine"
+	activate
+end tell
+EOT
+elif [ "$arg" = "off" -a -n "$pid" ] ; then
+	echo "Turning off Macintosh screen saver"
+	requirepassword 0
+	kill "$pid"
+	requirepassword 1
+fi
