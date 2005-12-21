@@ -24,14 +24,14 @@ keysetup() {
 	return 0
 }
 
-copy() {
+copyto() {
 	host="$1"
 	src="$2"
 	echo "Copying ${src} to ${host}..."
 	scp -r "${src}" "${host}:" && echo ok
 }
 
-execute() {
+executeon() {
 	host="$1"
 	cmd="$2"
 	echo "Executing ${cmd} to ${host}..."
@@ -68,5 +68,5 @@ if [ $? -ne 0 ] ; then
 	keysetup "${host}" "${remotever}" || exit 1
 fi
 
-copy "${host}" "${HOME}/dotfiles"
-execute "${host}" "${HOME}/dotfiles/mklinks.sh"
+copyto "${host}" "${HOME}/dotfiles"
+executeon "${host}" "dotfiles/mklinks.sh"
