@@ -22,4 +22,8 @@ fi
 
 export DISPLAY=:0.0
 cd "$HOME"
-/usr/bin/xterm -tn xtermc -xrm "xterm.VT100.background:#$color" "$@" > /dev/null 2>&1&
+if [ $# = 0 ] ; then
+	/usr/bin/xterm -tn xtermc -xrm "xterm.VT100.background:#$color" > /dev/null 2>&1&
+else
+	/usr/bin/xterm -tn xtermc -xrm "xterm.VT100.background:#$color" -e "$@" > /dev/null 2>&1&
+fi
