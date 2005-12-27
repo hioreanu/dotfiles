@@ -20,17 +20,6 @@ if /bin/ps auxww | /bin/fgrep XWin > /dev/null 2>&1 ; then : ; else
 	XWin -multiwindow -clipboard -silent-dup-error -emulate3buttons > /dev/null 2>&1&
 fi
 
-if [ -f "$HOME/.ssh/id_dsa.pub" -a -z "$SSH_AGENT_PID" ] ; then
-	SSH_AGENT_PID="`ps auxww | awk '/[s]sh-agent/ {print $1}'`"
-	export SSH_AGENT_PID
-	if [ -z "$SSH_AGENT_PID" ] ; then
-		eval `ssh-agent` > /dev/null 2>&1
-	else
-		SSH_AUTH_SOCK="`echo /tmp/ssh-*/agent.*`"
-	fi
-	export SSH_AGENT_PID SSH_AUTH_SOCK
-fi
-
 export DISPLAY=:0.0
 cd "$HOME"
 if [ $# = 0 ] ; then
