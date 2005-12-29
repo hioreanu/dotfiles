@@ -16,6 +16,10 @@ in
 esac
 
 export PATH="$PATH:/bin:/usr/X11R6/bin"
+
+# unset DISPLAY
+# rxvt +sb -vb -tn xtermc -fn 'Lucida Console' -fg "#909090" -bg "#$color" -e /bin/zsh
+
 if /bin/ps auxww | /bin/fgrep XWin > /dev/null 2>&1 ; then : ; else
 	XWin -multiwindow -clipboard -silent-dup-error -emulate3buttons > /dev/null 2>&1&
 fi
