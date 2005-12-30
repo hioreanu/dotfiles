@@ -1,0 +1,5 @@
+#!/bin/sh
+# this is fucking inane
+# commercial ssh.com client looks up home from passwd by uid
+
+exec ssh -i $HOME/.ssh2/identification "$@"
