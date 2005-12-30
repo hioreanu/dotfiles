@@ -17,8 +17,15 @@ esac
 
 export PATH="$PATH:/bin:/usr/X11R6/bin"
 
+# rxvt pros:
+#   doesn't start X11
+#   works with dual-head
+#   uses native fonts (cleartype)
+# rxvt cons:
+#   xterm16 vim soft palette requires 256 colors, rxvt has 16
+#   no middle-click emulation
 # unset DISPLAY
-# rxvt +sb -vb -tn xtermc -fn 'Lucida Console' -fg "#909090" -bg "#$color" -e /bin/zsh
+# rxvt +sb -vb -tn rxvt -fn 'Lucida Console' -fg "#909090" -bg "#$color" -ls
 
 if /bin/ps auxww | /bin/fgrep XWin > /dev/null 2>&1 ; then : ; else
 	XWin -multiwindow -clipboard -silent-dup-error -emulate3buttons > /dev/null 2>&1&
