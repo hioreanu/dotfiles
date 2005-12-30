@@ -63,11 +63,11 @@ if [ -z "$MANPATH" ] ; then
 fi
 
 pathdel() {
-	PATH=`echo "$PATH" | sed 's/:/\n/g' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
+	PATH=`echo "$PATH" | tr : '\n' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
 }
 pathadd() {
 	[ -d $1 ] || return
-	if echo "$PATH" | sed "s/:/\n/g" | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
+	if echo "$PATH" | tr : '\n' | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
 	case $2 in
 		"prepend") PATH="$1:$PATH" ;;
 		"append"|"") PATH="$PATH:$1" ;;
