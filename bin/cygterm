@@ -1,6 +1,15 @@
 #!/bin/bash
 # $Id$
 
+# To create a shortcut to this, execute the following:
+cat <<EOT > /dev/null
+mkshortcut -n xterm -A -P -d "Cygwin xterm shell" \
+	-w /bin \
+	-a "/bin/bash ${HOME}/bin/cygterm" \
+	-i /usr/X11R6/bin/run.exe -j 2 \
+	/usr/X11R6/bin/run.exe
+EOT
+
 case $RANDOM
 in
 	*0) color=000020 ;;
