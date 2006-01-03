@@ -1,7 +1,8 @@
 # .muttrc -- Alex Hioreanu
 source ~/.muttrc-gpg
 set folder="imaps://ahiorean@imap.uchicago.edu/"
-mailboxes "imaps://ahiorean@imap.uchicago.edu/INBOX"
+# mailboxes "imaps://ahiorean@imap.uchicago.edu/INBOX"
+mailboxes "imaps://ahiorean@imap.uchicago.edu/alumni"
 lists cs230@cs.uchicago.edu freebsd-questions@freebsd.org
 folder-hook cs230 set sort=threads
 folder-hook freebsd-questions set sort=threads
