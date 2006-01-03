@@ -7,7 +7,7 @@ linkhome()
 {
 	src="$1"
 	dst="$2"
-	test -f "${HOME}/${dst}" && mv -f "${HOME}/${dst}" "${SAVE}" && \
+	test -e "${HOME}/${dst}" && mv -f "${HOME}/${dst}" "${SAVE}" && \
 		echo "backed up existing ${dst}"
 	ln -s "${DOTFILES}/${src}" "${HOME}/${dst}" && \
 		echo "linked ${dst}"
