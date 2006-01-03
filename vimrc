@@ -32,17 +32,19 @@ function COLORON()
 	syn on
 endfunction
 
-autocmd BufNewFile,BufReadPre,FileReadPre *.java call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.pl call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.pm call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.cgi call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.c call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.h call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.cc call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.cpp call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.sh call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.xml call COLORON()
-autocmd BufNewFile,BufReadPre,FileReadPre *.sql call COLORON()
+if &term =~ 'xterm'
+	autocmd BufNewFile,BufReadPre,FileReadPre *.java call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.pl call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.pm call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.cgi call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.c call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.h call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.cc call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.cpp call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.sh call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.xml call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.sql call COLORON()
+endif
 
 if &t_Co > 2
 	syntax on
