@@ -141,7 +141,7 @@ case "`uname -s`" in
 esac
 
 if [ -f "$HOME/.ssh/id_dsa.pub" -a -z "$SSH_AGENT_PID" ] ; then
-	SSH_AGENT_PID="`ps auxww | awk '/[s]sh-agent/ {print $2}'`"
+	SSH_AGENT_PID="`ps -e | awk '/[s]sh-agent/ {print $2}'`"
 	if [ -z "$SSH_AGENT_PID" ] ; then
 		eval `ssh-agent` > /dev/null 2>&1
 	else
