@@ -140,15 +140,17 @@ case "`uname -s`" in
 		;;
 esac
 
-if [ -f "$HOME/.ssh/id_dsa.pub" -a -z "$SSH_AGENT_PID" ] ; then
-	SSH_AGENT_PID="`ps -e | awk '/[s]sh-agent/ {print $2}'`"
-	if [ -z "$SSH_AGENT_PID" ] ; then
-		eval `ssh-agent` > /dev/null 2>&1
-	else
-		SSH_AUTH_SOCK="`ls -t /tmp/ssh-*/agent.* | head -n 1`"
+loadsshagent() {
+	if [ -f "$HOME/.ssh/id_dsa.pub" -a -z "$SSH_AGENT_PID" ] ; then
+		SSH_AGENT_PID="`pgrep -f ssh-agent`"
+		if [ -z "$SSH_AGENT_PID" ] ; then
+			eval `ssh-agent` > /dev/null 2>&1
+		else
+			SSH_AUTH_SOCK="`ls -t /tmp/ssh-*/agent.* | head -n 1`"
+		fi
+		export SSH_AGENT_PID SSH_AUTH_SOCK
 	fi
-    export SSH_AGENT_PID SSH_AUTH_SOCK
-fi
+}
 
 randsort() {
 	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
