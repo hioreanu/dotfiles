@@ -9,7 +9,7 @@ RPS1="#%m%S${WINDOWINDICATOR}%s %*"
 bindkey -me
 
 # do not execute /etc/zlogout
-setopt NO_GLOBAL_RCS
+if [ ${ZSH_VERSION%%.*} -ge 4 ] ; then setopt NO_GLOBAL_RCS ; fi
 # don't need to use 'export'
 setopt ALL_EXPORT
 # if have bg jobs, must use C-d twice
