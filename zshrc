@@ -1,5 +1,8 @@
 # $Id$
 
+benchmark="yes" # for optimizing startup time; requires GNU date
+[ "$benchmark" = "yes" ] && zshstart=`date +%s%N`
+
 PS1='%(#.%B;%b.;) '
 if [ -n "$WINDOW" ] ; then
 	WINDOWINDICATOR="[$WINDOW]"
@@ -9,6 +12,7 @@ RPS1="#%m%S${WINDOWINDICATOR}%s %*"
 bindkey -me
 
 # do not execute /etc/zlogout
+# GLOBAL_RCS introduced in zsh 3.1.6b; faster to check only first token
 if [ ${ZSH_VERSION%%.*} -ge 4 ] ; then setopt NO_GLOBAL_RCS ; fi
 # don't need to use 'export'
 setopt ALL_EXPORT
@@ -16,8 +20,8 @@ setopt ALL_EXPORT
 # setopt CHECK_JOBS
 # don't send HUP to bg jobs on exit
 setopt NO_HUP
-# don't hash, always look in $PATH
-setopt NO_HASH_CMDS
+# hash pathname of command first time used
+setopt HASH_CMDS
 # don't put duplicate lines in history
 setopt HIST_IGNORE_DUPS
 # don't put lines that begin with space in history
@@ -63,11 +67,20 @@ if [ -z "$MANPATH" ] ; then
 fi
 
 pathdel() {
-	PATH=`echo "$PATH" | tr : '\n' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
+	# portable way to remove path component in Bourne shell:
+	# PATH=`echo "$PATH" | tr : '\n' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
+	# optimization: use zsh-specific feature to perform substitution
+	# avoids process invocations - saves 0.50s shell startup time on laptop
+	PATH=${(pj:\x3A:)${${(ps:\x3A:)PATH}:/$1}}
 }
 pathadd() {
-	[ -d $1 ] || return
-	if echo "$PATH" | tr : '\n' | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
+	1=${1%/}
+	[ -d "$1" ] || return
+	# portable way to search for a path component in Bourne shell:
+	# if echo "$PATH" | tr : '\n' | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
+	# optimization: use zsh-specific features to avoid additional processes
+	# saves 0.30s shell startup time on laptop
+	if [ "$PATH" != ${(pj:\x3A:)${${(ps:\x3A:)PATH}:/$1}} ] ; then return ; fi
 	case $2 in
 		"prepend") PATH="$1:$PATH" ;;
 		"append"|"") PATH="$PATH:$1" ;;
@@ -141,6 +154,7 @@ case "`uname -s`" in
 esac
 
 loadsshagent() {
+	# requires pgrep; so far works on boxes where this is used
 	if [ -f "$HOME/.ssh/id_dsa.pub" -a -z "$SSH_AGENT_PID" ] ; then
 		SSH_AGENT_PID="`pgrep -f ssh-agent`"
 		if [ -z "$SSH_AGENT_PID" ] ; then
@@ -206,3 +220,7 @@ else
 fi
 
 [ -e "$HOME/.zsh-local" ] && source "$HOME/.zsh-local"
+
+if [ "$benchmark" = "yes" ] ; then
+	echo Startup time: $(((`date +%s%N` - $zshstart) / 1000000))ms
+fi
