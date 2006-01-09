@@ -32,7 +32,7 @@ setopt INTERACTIVE_COMMENTS
 setopt LONG_LIST_JOBS
 # don't warn if /opt/*/bin matches nothing, return literal string
 setopt NO_NOMATCH
-# make 'echo -n' work correctly
+# do not overwrite partial output (no newline) with prompt
 setopt NO_PROMPT_CR
 # all xterms use the same history buffer
 # setopt SHARE_HISTORY
@@ -71,7 +71,7 @@ pathdel() {
 	# PATH=`echo "$PATH" | tr : '\n' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
 	# optimization: use zsh-specific feature to perform substitution
 	# avoids process invocations - saves 0.50s shell startup time on laptop
-	PATH=${(pj:\x3A:)${${(ps:\x3A:)PATH}:#$1}}
+	PATH=${(pj:\x3A:)${==${(ps:\x3A:)PATH}:#$1}}
 }
 pathadd() {
 	1=${1%/}
@@ -80,7 +80,7 @@ pathadd() {
 	# if echo "$PATH" | tr : '\n' | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
 	# optimization: use zsh-specific features to avoid additional processes
 	# saves 0.30s shell startup time on laptop
-	if [ "$PATH" != ${(pj:\x3A:)${${(ps:\x3A:)PATH}:#$1}} ] ; then return ; fi
+	if [ "$PATH" != ${(pj:\x3A:)${==${(ps:\x3A:)PATH}:#$1}} ] ; then return ; fi
 	case $2 in
 		"prepend") PATH="$1:$PATH" ;;
 		"append"|"") PATH="$PATH:$1" ;;
