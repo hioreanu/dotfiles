@@ -1,3 +1,4 @@
+' $Id$
 Dim GSPATH
 GSPATH = "C:\Program Files\gs\gs8.50"
 

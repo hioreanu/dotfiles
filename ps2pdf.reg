@@ -1,5 +1,6 @@
 REGEDIT4
 
+; $Id$
 [HKEY_CURRENT_USER\Software\Classes\.ps]
 
 [HKEY_CURRENT_USER\Software\Classes\.ps\Shell]

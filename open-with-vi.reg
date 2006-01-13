@@ -1,0 +1,13 @@
+REGEDIT4
+
+; $Id$
+[HKEY_CURRENT_USER\Software\Classes\*]
+
+[HKEY_CURRENT_USER\Software\Classes\*\Shell]
+
+[HKEY_CURRENT_USER\Software\Classes\*\Shell\MenuText]
+@="Open with vi"
+
+[HKEY_CURRENT_USER\Software\Classes\*\Shell\MenuText\Command]
+@="wscript.exe c:\\cygwin\\home\\ach\\dotfiles\\open-with-vi.vbs \"%1\""
+
