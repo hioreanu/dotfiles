@@ -128,6 +128,7 @@ alias gv='gv -antialias -noresize'
 alias h='head -n $(($LINES - 1))'
 alias dt='date +%Y%m%dT%H%M%S'
 alias ds='date +%Y%m%d'
+alias cvsstat='cvs status | fgrep Status:'
 
 case "`uname -s`" in
 	Darwin)
