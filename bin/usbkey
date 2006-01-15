@@ -1,0 +1,41 @@
+#!/bin/sh
+# $Id$
+
+DEV=/dev/sdc1
+
+locked() {
+	until test -L "$DEV" ; do sleep 1 ; done
+	mount /flash
+	if gpg --verify /flash/key.bin.gpg ; then
+		killall xtrlock &
+		killall xv &
+		gaim-remote back &
+		fsh 128.135.0.86 /Users/ach/bin/ss off &
+	else
+		return 1
+	fi
+}
+
+unlocked() {
+	until test \! -L "$DEV" ; do sleep 1 ; done
+	xset dpms force on
+	umount /flash
+	gaim-remote away
+	xtrlock &
+	xv -max -quit /home/ach/spongeb.gif &
+	fsh 128.135.0.86 /Users/ach/bin/ss on &
+	# sound -mute &
+	killall nullvnc
+}
+
+umount /flash 2> /dev/null
+
+if test \! -L "$DEV" ; then
+	echo 'You must first insert the key.'
+	exit 1
+fi
+
+while :; do
+	locked
+	unlocked
+done
