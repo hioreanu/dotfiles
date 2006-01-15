@@ -24,6 +24,7 @@ unlocked() {
 	xtrlock &
 	xv -max -quit /home/ach/spongeb.gif &
 	fsh 128.135.0.86 /Users/ach/bin/ss on &
+	/home/ach/nkvmnv/nkvmnvc -lock 128.135.0.87
 	# sound -mute &
 	killall nullvnc
 }
