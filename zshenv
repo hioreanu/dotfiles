@@ -1,1 +1,1 @@
-PATH="$PATH:/opt/bin"
+PATH="$PATH:/opt/bin:/usr/local/bin"
