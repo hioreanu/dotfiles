@@ -38,7 +38,7 @@ ignore Path X-MSMail-Priority X-MimeOLE X-Trace NNTP-Posting-Date
 ignore X-SessionID X-Hash-Info X-Hash Xref Precedence X-Authentication-Warning
 ignore X-Google-Sender-Auth X-Mailman-Trace Disposition-Notification-To
 set fast_reply=yes
-unset fcc_attach
+set record==Sent
 # set pop_host="nsit-popmail.uchicago.edu"
 # set pop_user="ahiorean"
 # set pop_delete
