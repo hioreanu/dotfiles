@@ -66,6 +66,7 @@ map \i :%!indent -kr -ts4:%!expand -4
 map \f :1,/^-- /!fmt
 " fmt paragraph
 map \q !}fmt
+map K !}fmt -78 -c
 " expand
 " map \t :%!expand -4
 map \t Ablurfl-vi-blah-blah:%!expand -4:%s/blurfl-vi-blah-blah$//
