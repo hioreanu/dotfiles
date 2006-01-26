@@ -7,9 +7,13 @@ linkhome()
 {
 	src="$1"
 	dst="$2"
-	test -f "${HOME}/${dst}" -o -d "${HOME}/${dst}" && \
+	test \! -h "${HOME}/${dst}" -a \
+			\( -f "${HOME}/${dst}" -o -d "${HOME}/${dst}" \) && \
 		mv -f "${HOME}/${dst}" "${SAVE}" && \
 		echo "backed up existing ${dst}"
+	test -h "${HOME}/${dst}" && \
+		echo "ignored existing link ${dst}" && \
+		return 0
 	ln -s "${DOTFILES}/${src}" "${HOME}/${dst}" && \
 		echo "linked ${dst}"
 }
@@ -20,6 +24,7 @@ linkhome emacs     .emacs
 linkhome emacs.d   .emacs.d
 linkhome exrc      .exrc
 linkhome muttrc    .muttrc
+linkhome screenrc  .screenrc
 linkhome vim       .vim
 linkhome vimrc     .vimrc
 linkhome Xdefaults .Xdefaults
