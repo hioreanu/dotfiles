@@ -8,12 +8,12 @@ keysetup() {
 	case "${version}" in
 		*OpenSSH*)
 			echo "Setting up OpenSSH keys on ${host}..."
-			ssh ${host} 'mkdir $HOME/.ssh ; cat >> $HOME/.ssh/authorized_keys' < $HOME/.ssh/id_dsa.pub
+			ssh ${host} 'umask 077 ; mkdir "$HOME/.ssh" ; cat >> "$HOME/.ssh/authorized_keys"' < "$HOME/.ssh/id_dsa.pub"
 			echo ok
 			;;
 		*SSH\ Secure\ Shell*)
 			echo "Setting up ssh.com keys on ${host}..."
-			ssh ${host} 'mkdir $HOME/.ssh2 ; echo Key ach0.ssh.com-dss > $HOME/.ssh2/authorization ; cat > $HOME/.ssh2/ach0.ssh.com-dss' < $HOME/.ssh2/ach0.ssh.com-dss
+			ssh ${host} 'umask 077 ; mkdir "$HOME/.ssh2" ; echo Key ach0.ssh.com-dss >> "$HOME/.ssh2/authorization" ; cat > "$HOME/.ssh2/ach0.ssh.com-dss"' < "$HOME/.ssh2/ach0.ssh.com-dss"
 			echo ok
 			;;
 		*)
@@ -34,7 +34,7 @@ copyto() {
 executeon() {
 	host="$1"
 	cmd="$2"
-	echo "Executing ${cmd} to ${host}..."
+	echo "Executing ${cmd} on ${host}..."
 	ssh "${host}" "${cmd}" && echo ok
 }
 
@@ -68,5 +68,6 @@ if [ $? -ne 0 ] ; then
 	keysetup "${host}" "${remotever}" || exit 1
 fi
 
+executeon "${host}" 'echo '"'"'PATH="$PATH:/opt/bin:/usr/local/bin"'"'"' >> "$HOME/.zshenv"'
 copyto "${host}" "${HOME}/dotfiles"
 executeon "${host}" "dotfiles/mklinks.sh"
