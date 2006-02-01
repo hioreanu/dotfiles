@@ -13,7 +13,7 @@ bindkey -me
 
 # do not execute /etc/zlogout
 # GLOBAL_RCS introduced in zsh 3.1.6b; faster to check only first token
-if [ ${ZSH_VERSION%%.*} -ge 4 ] ; then setopt NO_GLOBAL_RCS ; fi
+if [ "${ZSH_VERSION%%.*}" -ge 4 ] ; then setopt NO_GLOBAL_RCS ; fi
 # don't need to use 'export'
 setopt ALL_EXPORT
 # if have bg jobs, must use C-d twice
@@ -66,21 +66,42 @@ if [ -z "$MANPATH" ] ; then
 	MANPATH=$MANPATH:/usr/openwin/man:/usr/share/man:/opt/SUNWspro/man
 fi
 
-pathdel() {
-	# portable way to remove path component in Bourne shell:
-	# PATH=`echo "$PATH" | tr : '\n' | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
-	# optimization: use zsh-specific feature to perform substitution
-	# avoids process invocations - saves 0.50s shell startup time on laptop
-	PATH=${(pj:\x3A:)${==${(ps:\x3A:)PATH}:#$1}}
-}
+if [ "${${VERSION#zsh }%%.*}" = "2" ] ; then
+	# zsh version 2 - cannot use variable substitution string manipulation
+	newline="`echo ; echo`"
+	pathdel() {
+		PATH=`echo "$PATH" | tr : "${newline}" | fgrep -v -x "$1" | sed -e :a -e '$!N; s/\n/:/' -e ta`
+	}
+	inpath() {
+		# zsh 2.5.03 bug: segfault if "return" called in func. called from func.
+		(
+		if echo "$PATH" | tr : "${newline}" | fgrep -x "$1" > /dev/null 2>&1
+		then return 0
+		else return 1
+		fi
+		)
+	}
+else
+	pathdel() {
+		# optimization: use zsh-specific feature to perform substitution
+		# avoids process invocations - saves 0.50s shell startup time on laptop
+		PATH=${(pj:\x3A:)${==${(ps:\x3A:)PATH}:#$1}}
+	}
+	inpath() {
+		# optimization: use zsh-specific features to avoid additional processes
+		# saves 0.30s shell startup time on laptop
+		if [ "$PATH" != ${(pj:\x3A:)${==${(ps:\x3A:)PATH}:#$1}} ] ; then
+			return 0
+		else
+			return 1
+		fi
+	}
+fi
+
 pathadd() {
 	1=${1%/}
 	[ -d "$1" ] || return
-	# portable way to search for a path component in Bourne shell:
-	# if echo "$PATH" | tr : '\n' | fgrep -x "$1" > /dev/null 2>&1 ; then return ; fi
-	# optimization: use zsh-specific features to avoid additional processes
-	# saves 0.30s shell startup time on laptop
-	if [ "$PATH" != ${(pj:\x3A:)${==${(ps:\x3A:)PATH}:#$1}} ] ; then return ; fi
+	inpath "$1"
 	case $2 in
 		"prepend") PATH="$1:$PATH" ;;
 		"append"|"") PATH="$PATH:$1" ;;
@@ -110,7 +131,7 @@ fi
 pathdel "$HOME/bin"
 pathadd "$HOME/bin" "prepend"
 
-unhash -am '*'
+unhash -m '*'
 alias jobs="builtin jobs -l"
 alias jbos="builtin jobs -l"
 alias wpd=pwd
