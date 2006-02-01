@@ -286,9 +286,9 @@ after each command."
 (global-set-key "\C-z" 'go-down)
 ;(global-set-key "\M-[" 'align)
 (global-set-key "\C-h a" 'apropos)
+(global-set-key [C-tab] 'dabbrev-expand)
 ;(global-set-key [?\C-;] 'my-comment-region)
 (global-set-key [?\C-c 35] 'increment-number-at-point) ; 35 = '#'
-
 (global-set-key [C-backspace] 'hungry-backspace)
 (global-set-key [?\C-=] (function (lambda () (interactive)
                                     (manual-entry (current-word)))))
