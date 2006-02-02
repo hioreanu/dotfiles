@@ -131,7 +131,7 @@ fi
 pathdel "$HOME/bin"
 pathadd "$HOME/bin" "prepend"
 
-unhash -m '*'
+unalias -m '*'
 alias jobs="builtin jobs -l"
 alias jbos="builtin jobs -l"
 alias wpd=pwd
