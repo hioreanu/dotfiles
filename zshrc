@@ -149,7 +149,7 @@ alias gv='gv -antialias -noresize'
 alias h='head -n $(($LINES - 1))'
 alias dt='date +%Y%m%dT%H%M%S'
 alias ds='date +%Y%m%d'
-alias cvsstat='cvs status | fgrep Status:'
+alias cvsstat='cvs status 2>&1 | fgrep Status:'
 alias sudosh='sudo /bin/sh -c "`fc -ln -1`"'
 
 case "`uname -s`" in
