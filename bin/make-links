@@ -1,0 +1,31 @@
+#!/bin/sh
+
+makelinks () {
+	cd /opt
+	for i in */default/$1 ; do
+		if [ '*/default/'$1 = "$i" ] ; then return ; fi
+		echo ${i}:
+		cd /opt/$i
+		for j in * ; do
+			if [ ! -L /usr/local/$1/$j ] ; then
+				echo -e "\t$j"
+				mkdir -p /usr/local/$1
+				ln -s /opt/$i/$j /usr/local/$1/$j
+			fi
+		done
+		cd /opt
+	done
+}
+
+makelinks bin
+makelinks sbin
+makelinks include
+makelinks lib
+makelinks etc
+makelinks info
+makelinks libexec
+makelinks share
+for k in 1 2 3 4 5 6 7 8 9 n ; do
+	makelinks man/man${k}
+	makelinks man/cat${k}
+done
