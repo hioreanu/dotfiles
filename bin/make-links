@@ -1,5 +1,7 @@
 #!/bin/sh
 
+COMMON=/opt
+
 makelinks () {
 	cd /opt
 	for i in */default/$1 ; do
@@ -7,10 +9,10 @@ makelinks () {
 		echo ${i}:
 		cd /opt/$i
 		for j in * ; do
-			if [ ! -L /usr/local/$1/$j ] ; then
+			if [ ! -L ${COMMON}/$1/$j ] ; then
 				echo -e "\t$j"
-				mkdir -p /usr/local/$1
-				ln -s /opt/$i/$j /usr/local/$1/$j
+				mkdir -p ${COMMON}/$1
+				ln -s /opt/$i/$j ${COMMON}/$1/$j
 			fi
 		done
 		cd /opt
