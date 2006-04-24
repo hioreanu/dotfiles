@@ -1,40 +1,27 @@
 #!/bin/sh
-# $Id$
-
-DEV=/dev/sdc1
 
 locked() {
-	until test -L "$DEV" ; do sleep 1 ; done
-	mount /flash
-	if gpg --verify /flash/key.bin.gpg ; then
-		killall xtrlock &
-		killall xv &
+	until [ -f /media/disk*/key.bin.gpg ] ; do sleep 1 ; echo locked ; done
+	if gpg --verify /media/disk*/key.bin.gpg ; then
+		gnome-screensaver-command --deactivate &
 		gaim-remote back &
-		fsh 128.135.0.86 /Users/ach/bin/ss off &
+		ssh 128.135.0.86 /Users/ach/bin/ss off &
+		killall nkvmnvc &
+		killall nullvnc &
 	else
 		return 1
 	fi
 }
 
 unlocked() {
-	until test \! -L "$DEV" ; do sleep 1 ; done
-	xset dpms force on
-	umount /flash
-	gaim-remote away
-	xtrlock &
-	xv -max -quit /home/ach/spongeb.gif &
+	while [ -f /media/disk*/key.bin.gpg ] ; do sleep 1 ; echo unlocked ; done
+	gnome-screensaver-command --lock &
+	gaim-remote away &
 	fsh 128.135.0.86 /Users/ach/bin/ss on &
 	/home/ach/nkvmnv/nkvmnvc -lock 128.135.0.87
-	# sound -mute &
 	killall nullvnc
+	killall nkv
 }
-
-umount /flash 2> /dev/null
-
-if test \! -L "$DEV" ; then
-	echo 'You must first insert the key.'
-	exit 1
-fi
 
 while :; do
 	locked
