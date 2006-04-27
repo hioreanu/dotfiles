@@ -50,6 +50,9 @@ if [ -t 1 ] ; then
 		sun-cmd)
 			precmd() { print -Pn "\e]1%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" } ;;
 	esac
+	if [ -n "$WINDOW" ] ; then
+		precmd() { print -Pn "\ek%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
+	fi
 fi
 
 EDITOR=vi
