@@ -45,8 +45,11 @@ unset MAILCHECK
 # /xc/doc/hardcopy/xterm/ctlseqs.PS.gz
 if [ -t 1 ] ; then
 	case $TERM in
-		vt100|*xterm*|rxvt|cygwin)
-			precmd() { print -Pn "\e]2;%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a" } ;;
+		*xterm*|rxvt|cygwin)
+			precmd() {
+				print -Pn "\e]2;%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a"
+				print -Pn "\e]1;%m\a"
+			} ;;
 		sun-cmd)
 			precmd() { print -Pn "\e]1%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" } ;;
 	esac
