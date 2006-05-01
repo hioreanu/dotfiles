@@ -170,8 +170,10 @@ case "`uname -s`" in
 		alias open='cmd /c start'
 		;;
 	SunOS)
-		if [ "$TERM" = "linux" ]
-			then TERM=vt220
+		if [ "$TERM" = "linux" ] ; then
+			TERM=vt220
+		elif [ "$TERM" = "screen" ] ; then
+			TERM=vt100
 		elif [ "`uname -r | sed 's/\..*//'`" -gt 4 ] ; then
 			if [ "$TERM" = "cygwin" ] ; then
 				TERM=xtermc
