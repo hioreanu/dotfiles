@@ -49,7 +49,16 @@ if [ -t 1 ] ; then
 			precmd() {
 				print -Pn "\e]2;%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a"
 				print -Pn "\e]1;%m\a"
-			} ;;
+			}
+			screen() {
+				iconname="%m"
+				while getopts :S: scropt ; do
+					[ "$scropt" = "S" ] && iconname="${OPTARG} %m"
+				done
+				print -Pn "\e]1;\{${iconname}\}\a"
+				command screen "$@"
+			}
+			;;
 		sun-cmd)
 			precmd() { print -Pn "\e]1%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" } ;;
 	esac
