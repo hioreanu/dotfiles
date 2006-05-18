@@ -134,7 +134,7 @@ pathadd /usr/ccs/bin "append"
 pathadd /usr/xpg4/bin "append"
 pathdel /opt/bin
 pathadd /opt/bin "prepend"
-if [ "$UID" -eq "0" ] ; then
+if [ "$UID" -eq "0" -o \! -z "`/usr/bin/groups | fgrep wheel`" ] ; then
 	pathadd /sbin "append"
 	pathadd /usr/sbin "append"
 	pathadd /usr/local/sbin "append"
