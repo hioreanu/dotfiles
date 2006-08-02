@@ -45,5 +45,5 @@ cd "$HOME"
 if [ $# = 0 ] ; then
 	/usr/bin/xterm -tn xtermc -xrm "xterm.VT100.background:#$color" > /dev/null 2>&1&
 else
-	/usr/bin/xterm -tn xtermc -xrm "xterm.VT100.background:#$color" -e "$@" > /dev/null 2>&1&
+	/usr/bin/xterm -fa 'Lucida Console' -tn xtermc -xrm "xterm.VT100.background:#$color" -e "$@" > /dev/null 2>&1&
 fi
