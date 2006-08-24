@@ -1,0 +1,31 @@
+#!/bin/sh
+# $Id$
+
+osx() {
+	vol=`osascript <<EOT
+set vol to get volume settings
+get output volume of vol
+EOT`
+
+	if [ -z "$1" ] ; then
+		echo "${vol}%"
+		return 0
+	elif [ "$1" = "up" ] ; then
+		vol=$((${vol} + 10))
+	elif [ "$1" = "down" ] ; then
+		vol=$((${vol} - 10))
+	else
+		vol="$1"
+	fi
+	osascript -e "set volume output volume ${vol}"
+	return $?
+}
+
+case "`uname -s`" in
+	Darwin)
+			osx "$@"
+			;;
+	*)
+			echo "Not implemented on `uname -s`"
+			;;
+esac
