@@ -110,12 +110,24 @@ my %alpha_hash = (
 if ($#ARGV > -1 && $ARGV[0] =~ /-/) {
 	print <<EOT;
 usage: $0 [MIN] [MAX] [MAXCLASSES]
-
+       $0 <password-text>
 Spits out a random password between MIN and MAX characters long.
 Default MIN is 6, default MAX is 8, default MAXCLASSES is 4.
+If text is specified, print text in NATO standard phonetic alphabet.
 EOT
 	exit(0);
 }
+
+if ($ARGV[0] !~ /^[0-9]/) {
+	foreach my $arg (@ARGV) {
+		print $arg, "\n";
+		my @chars = split //, $arg;
+		print $alpha_hash{$_} . ' ' foreach @chars;
+		print "\n";
+	}
+	exit(0);
+}
+
 
 my $minchars = 8;
 my $maxchars = 8;
