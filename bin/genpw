@@ -4,8 +4,20 @@
 use strict;
 BEGIN { $^W = 1 }
 
-# only works on systems with ascii, but I've never touched an
-# IBM mainframe anyway
+use Getopt::Std ();
+
+sub usage_exit($)
+{
+	my ($code) = @_;
+	print <<EOT;
+usage: $0 [-c minclasses] [-C maxclasses] [-m minlength] [-M maxlength]
+       $0 <password-text>
+Spits out a random password between MINLENGTH and MAXLENGTH characters long.
+Default MINLENGTH is 6, default MAXLENGTH is 8, default CLASSES is 4.
+If text is specified, print text in NATO standard phonetic alphabet.
+EOT
+	exit($code);
+}
 
 srand(time() ^ ($$ + ($$ << 15)));
 
@@ -107,18 +119,24 @@ my %alpha_hash = (
 	' ' => 'space',
 );
 
-if ($#ARGV > -1 && $ARGV[0] =~ /-/) {
-	print <<EOT;
-usage: $0 [MIN] [MAX] [MAXCLASSES]
-       $0 <password-text>
-Spits out a random password between MIN and MAX characters long.
-Default MIN is 6, default MAX is 8, default MAXCLASSES is 4.
-If text is specified, print text in NATO standard phonetic alphabet.
-EOT
-	exit(0);
-}
+my $minchars = 8;
+my $maxchars = 8;
+my $minclasses = 3;
+my $maxclasses = 3;
 
-if ($ARGV[0] !~ /^[0-9]/) {
+my %opts;
+Getopt::Std::getopts('hm:M:c:C:', \%opts) or usage_exit(1);
+
+usage_exit(0) if ($opts{h});
+
+$minchars = $opts{m} if ($opts{m});
+$maxchars = $opts{M} if ($opts{M});
+$maxclasses  = $opts{c} if ($opts{c});
+$minclasses  = $opts{C} if ($opts{C});
+if ($minchars > $maxchars) { $maxchars = $minchars; }
+if ($minclasses > $maxclasses) { $maxclasses = $minclasses; }
+
+if ($#ARGV > -1) {
 	foreach my $arg (@ARGV) {
 		print $arg, "\n";
 		my @chars = split //, $arg;
@@ -128,30 +146,13 @@ if ($ARGV[0] !~ /^[0-9]/) {
 	exit(0);
 }
 
-
-my $minchars = 8;
-my $maxchars = 8;
-my $maxclasses = 4;
-if ($#ARGV > -1) {
-	$minchars = $ARGV[0];
-}
-if ($#ARGV > 0) {
-	$maxchars = $ARGV[1];
-}
-if ($#ARGV > 1) {
-	$maxclasses = $ARGV[2];
-}
-if ($minchars > $maxchars) {
-	$maxchars = $minchars;
-}
-
 local *RANDOM;
 my $have_devrandom = 1;
 open RANDOM, "/dev/random" or $have_devrandom = 0;
 
-my @output = ();
 my $chars = int($minchars + (rand ($maxchars - $minchars)));
-while ($#output + 1 < $chars) {
+my $output = '';
+while (length($output) < $chars) {
 	my $c;
 	if ($have_devrandom) {
 		read RANDOM, $c, 1 or die("read /dev/random: $!");
@@ -169,14 +170,18 @@ while ($#output + 1 < $chars) {
 	} elsif ($maxclasses == 3) {
 		next if ($c !~ /[A-Za-z0-9]/);
 	}
-	push(@output, $c);
+	$output .= $c;
+	if (length($output) == $chars) {
+		my $classes = 0;
+		$classes++ if ($output =~ /[A-Z]/);
+		$classes++ if ($output =~ /[a-z]/);
+		$classes++ if ($output =~ /[0-9]/);
+		$classes++ if ($output =~ /[^A-Za-z0-9]/);
+		$output = '' if ($classes < $minclasses);
+	}
 }
-foreach (@output) {
-	print;
-}
+
+print foreach split //, $output;
 print "\n";
-foreach (@output) {
-	print $alpha_hash{$_};
-	print " ";
-}
+print $alpha_hash{$_} . ' ' foreach split //, $output;
 print "\n";
