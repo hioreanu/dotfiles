@@ -13,7 +13,7 @@ sub usage_exit($)
 usage: $0 [-c minclasses] [-C maxclasses] [-m minlength] [-M maxlength]
        $0 <password-text>
 Spits out a random password between MINLENGTH and MAXLENGTH characters long.
-Default MINLENGTH is 6, default MAXLENGTH is 8, default CLASSES is 4.
+Default MINLENGTH is 6, default MAXLENGTH is 8, default CLASSES is 3.
 If text is specified, print text in NATO standard phonetic alphabet.
 EOT
 	exit($code);
@@ -21,7 +21,7 @@ EOT
 
 srand(time() ^ ($$ + ($$ << 15)));
 
-my %alpha_hash = (
+my %alphahash = (
 	'a' => 'alpha',
 	'b' => 'bravo',
 	'c' => 'charlie',
@@ -139,8 +139,7 @@ if ($minclasses > $maxclasses) { $maxclasses = $minclasses; }
 if ($#ARGV > -1) {
 	foreach my $arg (@ARGV) {
 		print $arg, "\n";
-		my @chars = split //, $arg;
-		print $alpha_hash{$_} . ' ' foreach @chars;
+		print $alphahash{$_} . ' ' foreach split //, $arg;
 		print "\n";
 	}
 	exit(0);
@@ -162,6 +161,7 @@ while (length($output) < $chars) {
 	}
 	next if (ord($c) <= 32 or ord($c) == 127);
 	next if ($c eq "1" or $c eq "I" or $c eq "l" or $c eq "|" or $c eq "0" or $c eq "O" or $c eq "o" or $c eq "\\" or $c eq '`');
+	next if (!$alphahash{$c});
 	# print ord($c), " $c", "\n";
 	if ($maxclasses == 1) {
 		next if ($c !~ /[A-Z]/);
@@ -183,5 +183,5 @@ while (length($output) < $chars) {
 
 print foreach split //, $output;
 print "\n";
-print $alpha_hash{$_} . ' ' foreach split //, $output;
+print $alphahash{$_} . ' ' foreach split //, $output;
 print "\n";
