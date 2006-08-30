@@ -1,4 +1,5 @@
 source ~/.exrc
+source ~/.vim/plugins/supertab.vim
 " set et
 set ruler
 set notitle
