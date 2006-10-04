@@ -5,12 +5,14 @@ benchmark="no" # for optimizing startup time; requires GNU date
 
 hostname=`hostname`
 hostname_esc=`hostname`
-hostname_esc='XXXXXX%{'${hostname}'%}'
 PS1='%(#.%B;%b.;) '
 if [ -n "$WINDOW" ] ; then
 	WINDOWINDICATOR="[$WINDOW]"
 fi
-RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
+setrps() {
+	RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
+}
+setrps
 
 bindkey -me
 
