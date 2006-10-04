@@ -3,11 +3,14 @@
 benchmark="no" # for optimizing startup time; requires GNU date
 [ "$benchmark" = "yes" ] && zshstart=`date +%s%N`
 
+hostname=`hostname`
+hostname_esc=`hostname`
+hostname_esc='XXXXXX%{'${hostname}'%}'
 PS1='%(#.%B;%b.;) '
 if [ -n "$WINDOW" ] ; then
 	WINDOWINDICATOR="[$WINDOW]"
 fi
-RPS1="#%m%S${WINDOWINDICATOR}%s %*"
+RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
 
 bindkey -me
 
@@ -47,13 +50,13 @@ if [ -t 1 ] ; then
 	case $TERM in
 		*xterm*|rxvt|cygwin)
 			precmd() {
-				print -Pn "\e]2;%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a"
-				print -Pn "\e]1;%m\a"
+				print -Pn "\e]2;${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a"
+				print -Pn "\e]1;${hostname}\a"
 			}
 			screen() {
-				iconname="%m"
+				iconname="${hostname}"
 				while getopts :S: scropt ; do
-					[ "$scropt" = "S" ] && iconname="${OPTARG} %m"
+					[ "$scropt" = "S" ] && iconname="${OPTARG} ${hostname}"
 				done
 				print -Pn "\e]1;\{${iconname}\}\a"
 				command screen "$@"
@@ -260,7 +263,8 @@ if [ -d ~/nsmail ] ; then rm -rf ~/nsmail ; fi
 if [ "$UID" = "0" ] ; then
 	umask 022
 else
-	umask 077
+	# umask 077
+	umask 022
 fi
 
 [ -e "$HOME/.zsh-local" ] && source "$HOME/.zsh-local"
