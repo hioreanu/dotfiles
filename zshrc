@@ -9,13 +9,23 @@ PS1='%(#.%B;%b.;) '
 if [ "$TERM" = "screen" ] ; then
 	if [ -n "$WINDOW" ] ; then
 		# XXX use escape codes instead
-		screen -X register . "$WINDOW
-"
+		SCREENHOST="$hostname"
+		screen -X addacl :window: +x paste
+		screen -X addacl :window: -x register
+		screen -X register h ${hostname}
+		screen -X register w $WINDOW
 	else
-		screen -X paste .
+		stty -echo
+		print -n "\e]83;paste w\a\n"
 		read WINDOW
+		print -n "\e]83;paste h\a\n"
+		read SCREENHOST
+		stty echo
 	fi
 	WINDOWINDICATOR="[$WINDOW]"
+	if [ "$SCREENHOST" != "$hostname" ] ; then
+		WINDOWINDICATOR="[$SCREENHOST $WINDOW]"
+	fi
 	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
 fi
 setrps() {
