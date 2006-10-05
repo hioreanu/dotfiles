@@ -17,29 +17,33 @@ esczshutf8() {
 }
 hostname_esc=`esczshutf8 "${hostname}"`
 PS1='%(#.%B;%b.;) '
+RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
 if [ "$TERM" = "screen" ] ; then
 	if [ -n "$WINDOW" ] ; then
 		# XXX use escape codes instead
 		SCREENHOST="$hostname"
 		screen -X addacl :window: +x paste
 		screen -X addacl :window: -x register
-		screen -X register h ${hostname}
-		screen -X register w $WINDOW
+		screen -X register h "${hostname}
+"
+		screen -X register w "$WINDOW
+"
 	else
 		stty -echo
-		print -n "\e]83;paste w\a\n"
+		print -n "\e]83;paste w\a"
 		read WINDOW
-		print -n "\e]83;paste h\a\n"
+		print -n "\e]83;paste h\a"
 		read SCREENHOST
 		stty echo
+		SCREENHOST=`esczshutf8 "${SCREENHOST}"`
 	fi
-	WINDOWINDICATOR="[$WINDOW]"
-	if [ "$SCREENHOST" != "$hostname" ] ; then
-		WINDOWINDICATOR="[$SCREENHOST $WINDOW]"
+	if [ "$SCREENHOST" = "$hostname" ] ; then
+		RPS1="#${hostname_esc}%S${WINDOW}%s %*"
+	else
+		RPS1="#${hostname_esc}%S%U${SCREENHOST}%u${WINDOW}%s %*"
 	fi
-	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
+	precmd() { print -Pn "\ek${hostname}[${SCREENHOST} ${WINDOW}]%D{%H:%M:%S} - %n: %~\e\\" }
 fi
-RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
 
 bindkey -me
 
