@@ -6,8 +6,17 @@ benchmark="no" # for optimizing startup time; requires GNU date
 hostname=`hostname`
 hostname_esc=`hostname`
 PS1='%(#.%B;%b.;) '
-if [ -n "$WINDOW" ] ; then
+if [ "$TERM" = "screen" ] ; then
+	if [ -n "$WINDOW" ] ; then
+		# XXX use escape codes instead
+		screen -X register . "$WINDOW
+"
+	else
+		screen -X paste .
+		read WINDOW
+	fi
 	WINDOWINDICATOR="[$WINDOW]"
+	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
 fi
 setrps() {
 	RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
@@ -68,7 +77,7 @@ if [ -t 1 ] ; then
 			precmd() { print -Pn "\e]1%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" } ;;
 	esac
 	if [ "$TERM" = "screen" -o -n "$WINDOW" ] ; then
-		precmd() { print -Pn "\ek%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
+		precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
 	fi
 fi
 
