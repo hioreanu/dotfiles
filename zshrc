@@ -3,7 +3,7 @@
 benchmark="no" # for optimizing startup time; requires GNU date
 [ "$benchmark" = "yes" ] && zshstart=`date +%s%N`
 
-hostname=`hostname`
+hostname=`hostname | sed 's/\..*//'`
 # work around zsh versions not implementing UTF-8 string width calculations
 esczshutf8() {
 	s="$1"
