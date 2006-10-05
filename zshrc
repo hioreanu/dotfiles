@@ -4,7 +4,18 @@ benchmark="no" # for optimizing startup time; requires GNU date
 [ "$benchmark" = "yes" ] && zshstart=`date +%s%N`
 
 hostname=`hostname`
-hostname_esc=`hostname`
+# work around zsh versions not implementing UTF-8 string width calculations
+esczshutf8() {
+	s="$1"
+	if [ -z "`echo "${s}" | tr -d '[:alnum:]'`" ] ; then
+		echo "${s}"
+		return 0
+	else
+		sz=$((`echo "${s}" | perl -CI -pe 's/.*/length()/e'` - 1))
+		perl -CI -e "print 'X' x $sz, '%{', chr(010) x $sz, '${s}', '%}', chr(012);"
+	fi
+}
+hostname_esc=`esczshutf8 "${hostname}"`
 PS1='%(#.%B;%b.;) '
 if [ "$TERM" = "screen" ] ; then
 	if [ -n "$WINDOW" ] ; then
@@ -28,10 +39,7 @@ if [ "$TERM" = "screen" ] ; then
 	fi
 	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
 fi
-setrps() {
-	RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
-}
-setrps
+RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
 
 bindkey -me
 
