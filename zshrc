@@ -17,11 +17,10 @@ esczshutf8() {
 }
 hostname_esc=`esczshutf8 "${hostname}"`
 PS1='%(#.%B;%b.;) '
-RPS1="#${hostname_esc}%S${WINDOWINDICATOR}%s %*"
+RPS1="#${hostname_esc} %*"
 if [ "$TERM" = "screen" ] ; then
 	if [ -n "$WINDOW" ] ; then
-		# XXX use escape codes instead
-		SCREENHOST="$hostname"
+		screenhost="${hostname}"
 		screen -X addacl :window: +x paste
 		screen -X addacl :window: -x register
 		screen -X register h "${hostname}
@@ -42,10 +41,12 @@ if [ "$TERM" = "screen" ] ; then
 	fi
 	if [ "$screenhost" = "$hostname" ] ; then
 		RPS1="#${hostname_esc}%S[%B${WINDOW}%b]%s %*"
+		WINDOWINDICATOR="[${WINDOW}]"
 	else
 		RPS1="#${hostname_esc}%S${screenhost_esc}[%B${WINDOW}%b]%s %*"
+		WINDOWINDICATOR="[${screenhost} ${WINDOW}]"
 	fi
-	precmd() { print -Pn "\ek${hostname}[${screenhost} ${WINDOW}]%D{%H:%M:%S} - %n: %~\e\\" }
+	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR}%D{%H:%M:%S} - %n: %~\e\\" }
 fi
 
 bindkey -me
@@ -101,9 +102,6 @@ if [ -t 1 ] ; then
 		sun-cmd)
 			precmd() { print -Pn "\e]1%m${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" } ;;
 	esac
-	if [ "$TERM" = "screen" -o -n "$WINDOW" ] ; then
-		precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\e\\" }
-	fi
 fi
 
 EDITOR=vi
