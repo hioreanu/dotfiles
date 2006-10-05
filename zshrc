@@ -26,6 +26,8 @@ if [ "$TERM" = "screen" ] ; then
 		screen -X addacl :window: -x register
 		screen -X register h "${hostname}
 "
+		screen -X register e "`esczshutf8 ${hostname}`
+"
 		screen -X register w "$WINDOW
 "
 	else
@@ -33,16 +35,17 @@ if [ "$TERM" = "screen" ] ; then
 		print -n "\e]83;paste w\a"
 		read WINDOW
 		print -n "\e]83;paste h\a"
-		read SCREENHOST
+		read screenhost
+		print -n "\e]83;paste e\a"
+		read screenhost_esc
 		stty echo
-		SCREENHOST=`esczshutf8 "${SCREENHOST}"`
 	fi
-	if [ "$SCREENHOST" = "$hostname" ] ; then
-		RPS1="#${hostname_esc}%S${WINDOW}%s %*"
+	if [ "$screenhost" = "$hostname" ] ; then
+		RPS1="#${hostname_esc}%S[%B${WINDOW}%b]%s %*"
 	else
-		RPS1="#${hostname_esc}%S%U${SCREENHOST}%u${WINDOW}%s %*"
+		RPS1="#${hostname_esc}%S${screenhost_esc}[%B${WINDOW}%b]%s %*"
 	fi
-	precmd() { print -Pn "\ek${hostname}[${SCREENHOST} ${WINDOW}]%D{%H:%M:%S} - %n: %~\e\\" }
+	precmd() { print -Pn "\ek${hostname}[${screenhost} ${WINDOW}]%D{%H:%M:%S} - %n: %~\e\\" }
 fi
 
 bindkey -me
