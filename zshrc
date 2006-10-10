@@ -7,7 +7,7 @@ hostname=`hostname | sed 's/\..*//'`
 # work around zsh versions not implementing UTF-8 string width calculations
 esczshutf8() {
 	s="$1"
-	if [ -z "`echo "${s}" | tr -d '[:alnum:]'`" ] ; then
+	if [ -z "`echo "${s}" | tr -d '[:graph:]'`" ] ; then
 		echo "${s}"
 		return 0
 	else
