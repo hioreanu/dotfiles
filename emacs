@@ -1,5 +1,5 @@
 ;;; .emacs -*-Emacs-Lisp-*-         created:  Fri Oct 10 23:03:43 1998
-;;; emacs initialization file       updated:  Tue Oct 26 11:23:30 2004
+;;; emacs initialization file       
 ; $Id$
 ;; function definitions:
 
@@ -467,6 +467,8 @@ after each command."
         (column-number-mode 1)
         (scroll-bar-mode -1)
         (menu-bar-mode 0)
+        (tool-bar-mode nil)
+        (blink-cursor-mode nil) ; emacs 22
         (font-lock-mode 0)
         (iswitchb-default-keybindings)
         (require 'auto-show)
@@ -667,8 +669,9 @@ at the end of your file."
 ;; NB:  I needed to comment out some (message "foo") thingy somewhere
 ;; in save-place.el in order to have this display....
 (defun my-lisp-mode-hook ()
-;  (eldoc-mode)
-  (message "lisp hackers have to be bound \(to-do 'it\)"))
+  (eldoc-mode t)
+;  (message "lisp hackers have to be bound \(to-do 'it\)")
+)
 (add-hook 'lisp-interaction-mode-hook 'my-lisp-mode-hook t)
 
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-mode-hook t)
