@@ -49,7 +49,7 @@ if [ "$TERM" = "screen" ] ; then
 	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR}%D{%H:%M:%S} - %n: %~\e\\" }
 fi
 
-bindkey -me
+bindkey -e
 
 # do not execute /etc/zlogout
 # GLOBAL_RCS introduced in zsh 3.1.6b; faster to check only first token
