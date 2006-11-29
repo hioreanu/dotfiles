@@ -5,7 +5,9 @@ locked() {
 	if gpg --verify /media/disk*/key.bin.gpg ; then
 		gnome-screensaver-command --deactivate &
 		gaim-remote back &
-		ssh 128.135.0.86 /Users/ach/bin/ss off &
+		fsh ach1 /Users/ach/bin/unmute &
+		fsh ach1 /Users/ach/bin/ss off &
+		ssh ach2 /home/ach/dotfiles/bin/ss-gnome off &
 		killall nkvmnvc &
 		killall nullvnc &
 	else
@@ -16,8 +18,10 @@ locked() {
 unlocked() {
 	while [ -f /media/disk*/key.bin.gpg ] ; do sleep 1 ; echo unlocked ; done
 	gnome-screensaver-command --lock &
+	fsh ach1 /Users/ach/bin/mute &
+	fsh ach1 /Users/ach/bin/ss on &
+	ssh ach2 /home/ach/dotfiles/bin/ss-gnome on &
 	gaim-remote away &
-	fsh 128.135.0.86 /Users/ach/bin/ss on &
 	/home/ach/nkvmnv/nkvmnvc -lock 128.135.0.87
 	killall nullvnc
 	killall nkv
