@@ -1,5 +1,6 @@
 #!/bin/sh
 # $Id$
+# controls gnome-screensaver remotely
 
 pid="`pgrep -f gnome-screensaver`"
 vars=`tr '\0' '\n' < /proc/${pid}/environ | fgrep DBUS`
