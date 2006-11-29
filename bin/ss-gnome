@@ -1,0 +1,14 @@
+#!/bin/sh
+# $Id$
+
+pid="`pgrep -f gnome-screensaver`"
+vars=`tr '\0' '\n' < /proc/${pid}/environ | fgrep DBUS`
+
+export DISPLAY=:0.0
+
+if [ "$1" = "on" ] ; then
+	env $vars gnome-screensaver-command --activate
+	env $vars gnome-screensaver-command --lock
+elif [ "$1" = "off" ] ; then
+	env $vars gnome-screensaver-command --deactivate
+fi
