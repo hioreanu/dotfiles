@@ -1,5 +1,5 @@
 # .muttrc -- Alex Hioreanu
-source ~/.muttrc-gpg
+# source ~/.muttrc-gpg
 set folder="imaps://ahiorean@imap.uchicago.edu/"
 # mailboxes "imaps://ahiorean@imap.uchicago.edu/INBOX"
 mailboxes "imaps://ahiorean@imap.uchicago.edu/alumni"
@@ -37,6 +37,10 @@ ignore List-Subscribe List-Id List-Unsubscribe List-Archive
 ignore Path X-MSMail-Priority X-MimeOLE X-Trace NNTP-Posting-Date
 ignore X-SessionID X-Hash-Info X-Hash Xref Precedence X-Authentication-Warning
 ignore X-Google-Sender-Auth X-Mailman-Trace Disposition-Notification-To
+ignore X-OriginalArrivalTime X-Proofpoint-Spam-Details X-UCH-SPAM-HEADER
+ignore X-Junkmail-Status X-Junkmail-SD-Raw X-Mirapoint-Loop-Id
+ignore X-Junkmail Auto-Submitted X-Old-Subject X-Junkmail-IP-Whitelist X-Ack
+ignore X-Junkmail Auto-Submitted X-Old-Subject
 set fast_reply=yes
 set record==Sent
 # set pop_host="nsit-popmail.uchicago.edu"
