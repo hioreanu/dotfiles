@@ -40,7 +40,10 @@ ignore X-Google-Sender-Auth X-Mailman-Trace Disposition-Notification-To
 ignore X-OriginalArrivalTime X-Proofpoint-Spam-Details X-UCH-SPAM-HEADER
 ignore X-Junkmail-Status X-Junkmail-SD-Raw X-Mirapoint-Loop-Id
 ignore X-Junkmail Auto-Submitted X-Old-Subject X-Junkmail-IP-Whitelist X-Ack
-ignore X-Junkmail Auto-Submitted X-Old-Subject
+ignore X-Yahoo-Newman-Id X-Apparently-To X-eGroups-Msg-Info X-Yahoo-Post-IP
+ignore X-Yahoo-Newman-Property X-RT-Loop-Prevention RT-Ticket Managed-by
+ignore RT-Originator X-RT-Original-Encoding DKIM-Signature X-cid X-sgxh1
+ignore RT-Originator X-RT-Original-Encoding
 set fast_reply=yes
 set record==Sent
 # set pop_host="nsit-popmail.uchicago.edu"
