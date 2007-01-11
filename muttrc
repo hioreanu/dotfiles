@@ -43,7 +43,7 @@ ignore X-Junkmail Auto-Submitted X-Old-Subject X-Junkmail-IP-Whitelist X-Ack
 ignore X-Yahoo-Newman-Id X-Apparently-To X-eGroups-Msg-Info X-Yahoo-Post-IP
 ignore X-Yahoo-Newman-Property X-RT-Loop-Prevention RT-Ticket Managed-by
 ignore RT-Originator X-RT-Original-Encoding DKIM-Signature X-cid X-sgxh1
-ignore RT-Originator X-RT-Original-Encoding
+ignore X-Sequence List-Owner X-Validation-by X-Sympa-To X-RT-Queue
 set fast_reply=yes
 set record==Sent
 # set pop_host="nsit-popmail.uchicago.edu"
