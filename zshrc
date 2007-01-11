@@ -301,6 +301,7 @@ else
 	umask 022
 fi
 
+[ -e "$HOME/dotfiles/zshrc.`hostname`" ] && source "$HOME/dotfiles/zshrc.`hostname`"
 [ -e "$HOME/.zsh-local" ] && source "$HOME/.zsh-local"
 
 if [ "$benchmark" = "yes" ] ; then
