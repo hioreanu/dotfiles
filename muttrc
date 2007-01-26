@@ -2,7 +2,11 @@
 # source ~/.muttrc-gpg
 set folder="imaps://ahiorean@imap.uchicago.edu/"
 # mailboxes "imaps://ahiorean@imap.uchicago.edu/INBOX"
-mailboxes "imaps://ahiorean@imap.uchicago.edu/alumni"
+# mailboxes "imaps://ahiorean@imap.uchicago.edu/alumni"
+set spoolfile="imaps://ahiorean@imap.uchicago.edu/INBOX"
+auto_view text/html application/x-pgp-message
+auto_view text/html  application/x-pgp-message
+set certificate_file="~/imap.cert"
 lists cs230@cs.uchicago.edu freebsd-questions@freebsd.org
 folder-hook cs230 set sort=threads
 folder-hook freebsd-questions set sort=threads
@@ -44,7 +48,13 @@ ignore X-Yahoo-Newman-Id X-Apparently-To X-eGroups-Msg-Info X-Yahoo-Post-IP
 ignore X-Yahoo-Newman-Property X-RT-Loop-Prevention RT-Ticket Managed-by
 ignore RT-Originator X-RT-Original-Encoding DKIM-Signature X-cid X-sgxh1
 ignore X-Sequence List-Owner X-Validation-by X-Sympa-To X-RT-Queue
+ignore X-Mozilla-Status X-Mozilla-Status2 Original-Recipient X-SFDC-User
+ignore X-mail_abuse_inquiries Resent-Date Resent-Message-ID Resent-To
+ignore X-Oracle-Calendar X-DNS-Request X-ELNK-Trace x-cr-hashedpuzzle
 set fast_reply=yes
+# set menu_scroll=yes
+set pager_stop=yes
+set fcc_attach="yes"
 set record==Sent
 # set pop_host="nsit-popmail.uchicago.edu"
 # set pop_user="ahiorean"
@@ -92,8 +102,8 @@ bind index b bounce-message
 #color index default        default ~R
 
 # color index brightred      default "~U ~h '.*[Pp]riority: ([12]|[hH]igh)'"
-color index brightred      default "~U ~h '.*[Pp]riority: ([12]|[hH]igh)'"
-color index brightmagenta  default "~F"
+# color index brightmagenta  default "~F"
+
 #color index brightdefault  default "~p"
 #color index default       default ~R
 #color index brightdefault default ~Q
@@ -121,6 +131,7 @@ color index brightmagenta  default "~F"
 set reverse_name
 # set alternates="(.*iorean.*@.*uchicago)|a(ca|mis)@.*rh\.uchicago"
 # set alternates="(ahiorean|ach)@(midway\.)?uchicago.edu
+set alternates="(ahiorean|ach)@(midway\.)?uchicago.edu
 #send-hook @securityfocus.com \
 #"my_hdr From: Alex Hioreanu <hioreanu+bugtraq@uchicago.edu> \
 #;set signature=''"
