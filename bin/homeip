@@ -1,0 +1,6 @@
+#!/bin/sh
+# $Id$
+if [ \! -t 1 ] ; then exec > /dev/null 2>&1 ; fi
+/sbin/iptables -I HOME 1 -p tcp -s ach.homeunix.net --dport 22 -j ACCEPT
+/sbin/iptables -D HOME 2
+/sbin/service iptables save
