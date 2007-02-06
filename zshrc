@@ -17,7 +17,9 @@ esczshutf8() {
 }
 hostname_esc=`esczshutf8 "${hostname}"`
 PS1='%(#.%B;%b.;) '
+# allow non-ascii prompts even if zsh only supports ascii
 RPS1="#${hostname_esc} %*"
+# pass along screen host and window through ssh
 if [ "$TERM" = "screen" ] ; then
 	if [ -n "$WINDOW" ] ; then
 		screenhost="${hostname}"
