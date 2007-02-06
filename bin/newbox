@@ -28,7 +28,7 @@ copyto() {
 	host="$1"
 	src="$2"
 	echo "Copying ${src} to ${host}..."
-	scp -r "${src}" "${host}:" && echo ok
+	scp -q -r "${src}" "${host}:" && echo ok
 }
 
 executeon() {

@@ -14,8 +14,7 @@ linkhome()
 	test -h "${HOME}/${dst}" && \
 		echo "ignored existing link ${dst}" && \
 		return 0
-	ln -s "${DOTFILES}/${src}" "${HOME}/${dst}" && \
-		echo "linked ${dst}"
+	ln -s "${DOTFILES}/${src}" "${HOME}/${dst}"
 }
 
 linkhome antrc     .antrc
