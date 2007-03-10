@@ -487,7 +487,8 @@ after each command."
 (if (not display-messages-buffer)
     (progn (setq message-log-max nil)
            (kill-buffer "*Messages*")))
-
+(setq custom-file
+      (concat "~/.emacs.d/custom-" (number-to-string emacs-major-version) ".el"))
 (mapcar (lambda (file) (and (file-exists-p file) (load-file file)))
   '("~/src/my-info-bookmark.el"
     "~/src/my-mutt-mode.el"
@@ -496,6 +497,7 @@ after each command."
     "~/src/emacs-packages/html-helper-mode.el"
     "~/vm.elc"
     "~/src/align.el"))
+(load custom-file)
 
 ; really bad terminal emulators emulate only vt100 or vt220, and poorly
 (if (and (not window-system) 
