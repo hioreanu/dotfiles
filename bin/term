@@ -24,4 +24,5 @@ g=$(($num % 4))0
 b=20
 if [ $r -eq 30 ] ; then r=00 ; b=$(($b + 10)) ; fi
 if [ $g -eq 30 ] ; then g=20 ; b=$(($b + 10)) ; fi
-xterm -fa foo -xrm "xterm.VT100.background:#$r$g$b"
+xterm -fg gray -fa foo -xrm "xterm.VT100.background:#$r$g$b" "$@"
+#-xrm "xterm.VT100.foreground: #010101"

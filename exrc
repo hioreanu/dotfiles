@@ -4,13 +4,12 @@
 set autoindent
 set noignorecase
 set shell=/bin/sh
-set showmatch
 set showmode
 set shiftwidth=4
 set tabstop=4
 set wrapmargin=8
-set flash
-set showmatch
+"set flash
+"set showmatch
 set redraw
 " Oracle does not come with a usable client program:
 ab ora w! /tmp/ach.osql:%!oracle
