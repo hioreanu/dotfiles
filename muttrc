@@ -138,7 +138,7 @@ bind index b bounce-message
 set reverse_name
 # set alternates="(.*iorean.*@.*uchicago)|a(ca|mis)@.*rh\.uchicago"
 # set alternates="(ahiorean|ach)@(midway\.)?uchicago.edu
-set alternates="(ahiorean|ach)@(midway\.)?uchicago.edu
+
 #send-hook @securityfocus.com \
 #"my_hdr From: Alex Hioreanu <hioreanu+bugtraq@uchicago.edu> \
 #;set signature=''"
