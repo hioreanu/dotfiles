@@ -29,8 +29,11 @@ if [ "$TERM" = "screen" ] ; then
 "
 		screen -X register e "`esczshutf8 ${hostname}`
 "
-		screen -X register w "$WINDOW
+		ssh() {
+			screen -X register w "$WINDOW
 "
+			command ssh "$@"
+		}
 	else
 		stty -echo
 		print -n "\e]83;paste w\a"
