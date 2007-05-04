@@ -10,6 +10,8 @@ map! <f1> <esc>
 set nocompatible
 set backspace=indent,eol,start
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
+hi Search ctermbg=none
+hi Search cterm=inverse
 
 " command-line mappings
 cnoremap <C-A> <Home>
