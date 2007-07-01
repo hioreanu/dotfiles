@@ -3,6 +3,9 @@
 benchmark="no" # for optimizing startup time; requires GNU date
 [ "$benchmark" = "yes" ] && zshstart=`date +%s%N`
 
+# on ach3-xp /bin isn't in path
+( echo x | grep . > /dev/null 2>&1 ) || PATH="$PATH:/bin:/usr/bin"
+
 hostname=`hostname | sed 's/\..*//'`
 # work around zsh versions not implementing UTF-8 string width calculations
 esczshutf8() {
@@ -167,6 +170,7 @@ pathadd() {
 }
 
 pathdel '.'
+
 
 for i in /opt/*/bin ; do pathadd $i "append" ; done
 for i in /usr/local/*/bin ; do pathadd $i "prepend" ; done
