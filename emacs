@@ -1,5 +1,4 @@
 ;;; .emacs -*-Emacs-Lisp-*-         created:  Fri Oct 10 23:03:43 1998
-;;; emacs initialization file       
 ; $Id$
 ;; function definitions:
 
@@ -156,6 +155,7 @@ Example:  (split \":\" \"/bin:/usr/bin:/usr/ucb\")
   "For use only with Windows telnet (best avoided at all costs)."
   (interactive)
   (global-set-key "\C-ch" 'help)
+  (global-set-key "\C-\M-h" 'backward-kill-word)
   (keyboard-translate ?\C-h ?\C-?)
   (message "Now C-c h is help, and C-h is delete"))
 
@@ -277,11 +277,13 @@ after each command."
 
 ;; global key bindings
 
+(global-set-key "\C-ch" 'help)
 (global-set-key "\C-l" 'redraw-display)
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-x\C-b" 'electric-buffer-list)
 (global-set-key "\C-xm" 'vm-mail)
 (global-set-key "\M-i" 'indent-relative)
+(global-set-key "\M-k" 'kill-buffer)
 (global-set-key "\M-z" 'go-up)
 (global-set-key "\C-z" 'go-down)
 ;(global-set-key "\M-[" 'align)
@@ -308,10 +310,12 @@ after each command."
 (global-set-key "\C-cc" 'caps-lock-mode)
 (global-set-key [?\s-s] 'ispell-buffer)
 (global-set-key "\C-cf" 'insert-ifdef)
+(global-set-key [up] 'go-up)
+(global-set-key [down] 'go-down)
 
 ; this is quieter than global-unset-key:
 (mapcar (function (lambda (key) (global-set-key key 'ignore)))
-        '([insert] [home] [end] [prior] [next] [left] [right] [up] [down]
+        '([insert] [home] [end] [left] [right]
           [f1] [f2] [f3] [f4] [f5] [f6] [f7] [f8] [f9] [f10] [f11] [f12]))
 
 ;; Setting various variables:
@@ -353,7 +357,7 @@ after each command."
       spook-phrases-file                "~/spook.lines"
       widget-mouse-face                 'default
       gc-cons-threshold                 10000000
-      show-paren-style                  'expression)
+      show-paren-style                  'parenthesis)
 
 (setq load-path (cons "~/src/emacs-packages" load-path))
 (setq backup-disable-regexp  
@@ -501,7 +505,7 @@ after each command."
 
 ; really bad terminal emulators emulate only vt100 or vt220, and poorly
 (if (and (not window-system) 
-         (not (null (string-match "vt100\\|vt220\\|xterm" (getenv "TERM")))))
+         (not (null (string-match "vt100\\|vt220" (getenv "TERM")))))
     (fix-keys))
 (if (eq window-system 'x) (global-set-key "\C-x\C-z" 'ignore))
 
@@ -654,13 +658,15 @@ at the end of your file."
     (set-face-foreground 'info-node "red")
     (set-face-background 'info-node "black")
     (setq automatic-footnotes "On")
-    (local-set-key "j" 'go-down)
-    (local-set-key "k" 'go-up))
+;    (local-set-key "j" 'go-down)
+;    (local-set-key "k" 'go-up)
+)
 (add-hook 'Info-mode-hook 'my-info-stuff)
 
 (defun my-view-mode-hook ()
-  (local-set-key "j" 'go-down)
-  (local-set-key "k" 'go-up))
+;  (local-set-key "j" 'go-down)
+;  (local-set-key "k" 'go-up)
+)
 (add-hook 'view-mode-hook 'my-view-mode-hook)
 
 (defun my-mutt-mode-hook ()
@@ -672,8 +678,7 @@ at the end of your file."
 ;; in save-place.el in order to have this display....
 (defun my-lisp-mode-hook ()
   (eldoc-mode t)
-;  (message "lisp hackers have to be bound \(to-do 'it\)")
-)
+  (message nil))
 (add-hook 'lisp-interaction-mode-hook 'my-lisp-mode-hook t)
 
 (add-hook 'emacs-lisp-mode-hook 'my-lisp-mode-hook t)
@@ -804,13 +809,15 @@ at the end of your file."
   (setq show-trailing-whitespace 1)
   (tool-bar-mode -1))
 
+(and (file-readable-p (concat (getenv "HOME") "/.emacs-local"))
+     (load-file (concat (getenv "HOME") "/.emacs-local")))
+
 ;; Start with a nice clean environment:
 
 (garbage-collect)
 
 ;TODO: fix the minibuffer so that it doesn't display the name of the
 ;current buffer when switching buffers, make a tdf minor mode, gzip-mode
-
 ; completion-ignored-extensions
 ; delete-if-not (instead of 'filter')
 
