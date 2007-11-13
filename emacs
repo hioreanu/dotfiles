@@ -758,18 +758,7 @@ at the end of your file."
 
 (cond ((string-match "VMWARE\\|C6N0L6\\|ALEX" system-identification) 
        (do-nt-stuff))
-      ((string-match (concat "greenscreen"
-                             "\\|laptop"
-                             "\\|broad-"
-                             "\\|ataraxia"
-                             "\\|sloth"
-                             "\\|lust"
-                             "\\|greed"
-                             "\\|anger"
-                             "\\|pride"
-                             "\\|gluttony"
-                             "\\|envy")
-                     system-identification)
+      ((string-match "greenscreen" system-identification)
        (do-home-stuff))
       (t (do-other-machine-stuff)))
 
