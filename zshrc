@@ -3,10 +3,9 @@
 benchmark="no" # for optimizing startup time; requires GNU date
 [ "$benchmark" = "yes" ] && zshstart=`date +%s%N`
 
-# on ach3-xp /bin isn't in path
-( echo x | grep . > /dev/null 2>&1 ) || PATH="$PATH:/bin:/usr/bin"
+hostname="`hostname`"
+hostname="${hostname%%.*}"
 
-hostname=`hostname | sed 's/\..*//'`
 # work around zsh versions not implementing UTF-8 string width calculations
 esczshutf8() {
 	s="$1"
@@ -22,8 +21,12 @@ hostname_esc=`esczshutf8 "${hostname}"`
 PS1='%(#.%B;%b.;) '
 # allow non-ascii prompts even if zsh only supports ascii
 RPS1="#${hostname_esc} %*"
-# pass along screen host and window through ssh
-if [ "$TERM" = "screen" ] ; then
+case "$TERM" in
+	screen*)
+	# XXX if screen is available on remote host, screen -X to 
+	# re-add window number to register
+	# re-read register in precmd
+	# XXX can copy-to-reg screen's idea of window directly, without env var?
 	if [ -n "$WINDOW" ] ; then
 		screenhost="${hostname}"
 		screen -X addacl :window: +x paste
@@ -54,8 +57,26 @@ if [ "$TERM" = "screen" ] ; then
 		RPS1="#${hostname_esc}%S${screenhost_esc}[%B${WINDOW}%b]%s %*"
 		WINDOWINDICATOR="[${screenhost} ${WINDOW}]"
 	fi
-	precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR}%D{%H:%M:%S} - %n: %~\e\\" }
-fi
+	# moved to preexec for all-xterms-in-screen
+	# precmd() { print -Pn "\ek${hostname}${WINDOWINDICATOR}%D{%H:%M:%S} - %n: %~\e\\" }
+        preexec() {
+          cmd="$1"
+          # XXX also matches "cdb", "fghack", etc.
+          # XXX for "fg", try to get job name
+          if [[ -n "${cmd##(jobs|pwd|fg|cd|bg|ls|date)*}" ]] ; then
+            # cwd is confusing in this context (before executing "cd")
+            # could parse argument of "cd" as special case, but would require
+            # invoking subshell to use prompt substituion via "print"
+            # leave out directory for now, don't treat "cd" specially
+            # prevcmd="$cmd"
+            # cmd="${cmd/cd*/$prevcmd}"
+            # print -Pn "\ek${hostname} %D{%H:%M:%S} %15<...<%2~: $cmd\e\\"
+            print -Pn "\ek${hostname} %D{%H:%M:%S}${PERSTTITLE}: $cmd\e\\"
+            # XXX try benchmarking with print in background, detached
+          fi
+        }
+	;;
+esac
 
 bindkey -e
 
@@ -112,12 +133,18 @@ if [ -t 1 ] ; then
 	esac
 fi
 
+persttitle() {
+  export PERSTTITLE=" $1"
+}
+
 EDITOR=vi
 VISUAL=$EDITOR
 LESS="-f -M -e -g -i -X"
 PAGER=less
 CVS_RSH=ssh
 CVSEDITOR=vi
+GREP_OPTIONS='--color=auto'
+GREP_COLOR='4'
 
 [ -z "$CVSROOT" ] && CVSROOT="$HOME/CVSROOT"
 [ -z "$PATH" ] && PATH="/bin:/usr/bin"
@@ -193,6 +220,10 @@ pathdel "$HOME/bin"
 pathadd "$HOME/bin" "prepend"
 
 unalias -m '*'
+alias les=less
+alias elss=less
+alias lees=less
+alias Less=less
 alias jobs="builtin jobs -l"
 alias jbos="builtin jobs -l"
 alias wpd=pwd
@@ -306,8 +337,7 @@ if [ -d ~/nsmail ] ; then rm -rf ~/nsmail ; fi
 if [ "$UID" = "0" ] ; then
 	umask 022
 else
-	# umask 077
-	umask 022
+	umask 027
 fi
 
 [ -e "$HOME/dotfiles/zshrc.`hostname`" ] && source "$HOME/dotfiles/zshrc.`hostname`"
