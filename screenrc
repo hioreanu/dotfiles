@@ -1,3 +1,13 @@
 escape ^Tt
 startup_message off
-vbell_msg ALERT
+vbell off
+# vbell_msg ALERT
+attrcolor b ".I" 
+# fix broken system "xterm" entry which specifies 16 colors (can do 256)
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+termcapinfo gnome-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# defbce "on"
+source ${HOME}/.screenrc-local
+echo ""
+shell '/bin/zsh'
