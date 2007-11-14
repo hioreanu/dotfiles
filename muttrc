@@ -1,9 +1,10 @@
 # .muttrc -- Alex Hioreanu
 # source ~/.muttrc-gpg
-set folder="imaps://ahiorean@imap.uchicago.edu/"
+# set folder="imaps://ahiorean@imap.uchicago.edu/"
+set folder="imaps://imap.gmail.com/"
+mailboxes "imaps://imap.gmail.com/INBOX"
 # mailboxes "imaps://ahiorean@imap.uchicago.edu/INBOX"
-# mailboxes "imaps://ahiorean@imap.uchicago.edu/alumni"
-set spoolfile="imaps://ahiorean@imap.uchicago.edu/INBOX"
+set timeout=15
 set implicit_autoview
 auto_view text/html application/x-pgp-message
 alternative_order text/plain text
@@ -57,7 +58,7 @@ ignore X-Oracle-Calendar X-DNS-Request X-ELNK-Trace x-cr-hashedpuzzle
 ignore x-cr-puzzleid X-Web X-GPG-fingerprint X-GPG-Key X-GPG-Subkey
 ignore X-Editor X-YMail-OSG X-Spam-Checker-Version X-Spam-Level
 ignore X-Spam-Status X-Mirapoint-RAPID-Raw Authentication-Results
-ignore X-Spam-Status X-Mirapoint-RAPID-Raw
+set autoedit
 set fast_reply=yes
 # set menu_scroll=yes
 set pager_stop=yes
@@ -69,8 +70,8 @@ set record==Sent
 unset use_from
 set realname="Alex Hioreanu"
 my_hdr Return-Path: <hioreanu@gmail.com>
-my_hdr Return-Path: <ach@uchicago.edu>
-my_hdr From: ach@uchicago.edu
+my_hdr Return-Path: <hioreanu@gmail.com>
+my_hdr From: hioreanu@gmail.com
 set editor="vi"
 set pager_context=0
 set pager_stop
