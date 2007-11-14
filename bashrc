@@ -262,11 +262,11 @@ endian() {
 xtitle() {
 	echo -e "\033]2;$*\007" | tr -d '\012'
 }
-if [ ! -z $DISPLAY ] ; then
-    cd() {
-        builtin cd "$@" && xtitle "$HOSTESS: $PWD"
-    }
-fi
+#if [ ! -z $DISPLAY ] ; then
+#    cd() {
+#        builtin cd "$@" && xtitle "$HOSTESS: $PWD"
+#    }
+#fi
 if [ -d ~/nsmail ] ; then
     rm -rf ~/nsmail;
 fi
