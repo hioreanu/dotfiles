@@ -230,7 +230,7 @@ else use \"default-date-format\" as format string."
         (forward-char 1))
     (delete-char 1)))
 
-(defun my-comment-region (start end &optional arg)
+(defun axh-comment-region (start end &optional arg)
   (interactive "r\nP")
   (or comment-start
       (progn
@@ -289,7 +289,7 @@ after each command."
 ;(global-set-key "\M-[" 'align)
 (global-set-key "\C-h a" 'apropos)
 (global-set-key [C-tab] 'dabbrev-expand)
-;(global-set-key [?\C-;] 'my-comment-region)
+;(global-set-key [?\C-;] 'axh-comment-region)
 (global-set-key [?\C-c 35] 'increment-number-at-point) ; 35 = '#'
 (global-set-key [C-backspace] 'hungry-backspace)
 (global-set-key [?\C-=] (function (lambda () (interactive)
@@ -548,7 +548,7 @@ at the end of your file."
 (add-hook 'write-file-hooks 'write-update-date-hook) 
 (add-hook 'after-save-hook 'write-exec-hook)
 
-(defun my-c-newline ()
+(defun axh-c-newline ()
   (interactive)
   (if (and (or (eq (caar (c-guess-basic-syntax)) 'c)
                (eq (caar (c-guess-basic-syntax)) 'comment-intro))
@@ -556,7 +556,7 @@ at the end of your file."
            (null (string-match "\\*/[ \t]*\n" (thing-at-point 'line))))
       (progn (newline-and-indent) (insert "* "))
     (newline-and-indent)))
-(defun my-c-slash ()
+(defun axh-c-slash ()
   (interactive)
   (if (and (eq (caar (c-guess-basic-syntax)) 'c)
            (string-match "\\* \n" (thing-at-point 'line)))
@@ -573,7 +573,7 @@ at the end of your file."
     (if (eolp)
         nil
       'stop)))
-(defun my-c-stuff ()
+(defun axh-c-stuff ()
   (c-set-style "k&r")
   (setq c-basic-offset                  4
 ;        c-comment-continuation-stars    "* "
@@ -607,52 +607,52 @@ at the end of your file."
   (c-set-offset 'brace-list-open '+)
   (set (make-local-variable 'dabbrev-case-fold-search) nil)
   (set (make-local-variable 'dabbrev-case-replace) nil)
-  (define-key c-mode-base-map "\C-m" 'my-c-newline)
-  (define-key c-mode-base-map "/" 'my-c-slash)
+  (define-key c-mode-base-map "\C-m" 'axh-c-newline)
+  (define-key c-mode-base-map "/" 'axh-c-slash)
   (setq c-C++-protection-kwds "private\\|protected\\|public\\|signals\\|slots")
   (c-toggle-auto-hungry-state 1))
-(add-hook 'c-mode-common-hook 'my-c-stuff)
+(add-hook 'c-mode-common-hook 'axh-c-stuff)
 
 ; FIXME: move into .emacs-local
 ; tabs are the convention in NSIT's NSD group
 (add-hook 'java-mode-hook (lambda nil (setq indent-tabs-mode t)))
 
 ; FIXME:  asm-mode really sucks, need to rewrite it someday
-(defun my-asm-newline ()
+(defun axh-asm-newline ()
   (interactive)
   (delete-horizontal-space)
   (asm-newline)
   (beginning-of-line)
   (delete-horizontal-space)
   (tab-to-tab-stop))
-(defun my-asm-indent ()
+(defun axh-asm-indent ()
   (interactive)
   (save-excursion
     (beginning-of-line)
     (if (looking-at " ")
         (delete-horizontal-space)
       (insert "    "))))
-(defun my-asm-space ()
+(defun axh-asm-space ()
   (interactive)
   (if (eq (string-match "^    [^ \t]*$" (thing-at-point 'line)) 0)
       (tab-to-tab-stop)
     (insert " ")))
-(defun my-asm-hook ()
+(defun axh-asm-hook ()
   (setq tab-stop-list '(4 12 32))
-  (define-key asm-mode-map " " 'my-asm-space)
+  (define-key asm-mode-map " " 'axh-asm-space)
   (define-key asm-mode-map "\C-j" 'newline)
-  (define-key asm-mode-map "\C-i" 'my-asm-indent)
+  (define-key asm-mode-map "\C-i" 'axh-asm-indent)
   (define-key asm-mode-map [backspace] 'hungry-backspace)
-  (define-key asm-mode-map "\C-m" 'my-asm-newline))
-(add-hook 'asm-mode-hook 'my-asm-hook)
+  (define-key asm-mode-map "\C-m" 'axh-asm-newline))
+(add-hook 'asm-mode-hook 'axh-asm-hook)
 
-(defun my-textmode-stuff ()
+(defun axh-textmode-stuff ()
   (setq fill-column 71)
   (setq sentence-end-double-space t))
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'text-mode-hook 'my-textmode-stuff)
+(add-hook 'text-mode-hook 'axh-textmode-stuff)
 
-(defun my-info-stuff ()
+(defun axh-info-stuff ()
     (set-face-foreground 'info-xref "blue")
     (set-face-background 'info-xref "black")
     (set-face-foreground 'info-node "red")
@@ -661,27 +661,27 @@ at the end of your file."
 ;    (local-set-key "j" 'go-down)
 ;    (local-set-key "k" 'go-up)
 )
-(add-hook 'Info-mode-hook 'my-info-stuff)
+(add-hook 'Info-mode-hook 'axh-info-stuff)
 
-(defun my-view-mode-hook ()
+(defun axh-view-mode-hook ()
 ;  (local-set-key "j" 'go-down)
 ;  (local-set-key "k" 'go-up)
 )
-(add-hook 'view-mode-hook 'my-view-mode-hook)
+(add-hook 'view-mode-hook 'axh-view-mode-hook)
 
-(defun my-mutt-mode-hook ()
+(defun axh-mutt-mode-hook ()
   (fix-keys)
   (flyspell-mode 1))
-(add-hook 'mutt-mode-hook 'my-mutt-mode-hook)
+(add-hook 'mutt-mode-hook 'axh-mutt-mode-hook)
 
 ;; NB:  I needed to comment out some (message "foo") thingy somewhere
 ;; in save-place.el in order to have this display....
-(defun my-lisp-mode-hook ()
+(defun axh-lisp-mode-hook ()
   (eldoc-mode t)
   (message nil))
-(add-hook 'lisp-interaction-mode-hook 'my-lisp-mode-hook t)
+(add-hook 'lisp-interaction-mode-hook 'axh-lisp-mode-hook t)
 
-(add-hook 'emacs-lisp-mode-hook 'my-lisp-mode-hook t)
+(add-hook 'emacs-lisp-mode-hook 'axh-lisp-mode-hook t)
 
 ;; NT-specific stuff:
 
