@@ -1,6 +1,11 @@
 source ~/.exrc
 source ~/.vim/plugins/supertab.vim
-" set et
+" FIXME: move to vimrc.local
+ 
+  
+ 
+set nolist
+set et
 set ruler
 set notitle
 set clipboard=exclude:.*
@@ -24,7 +29,7 @@ let xterm16bg_Normal = 'none'
 let xterm16_brightness = 'med'
 
 function COLORON()
-	if &term =~ 'xterm'
+	if &term =~ 'xterm' || &term =~ 'screen'
 		set t_Co=256
 	endif
 	if version <= 601
@@ -33,8 +38,10 @@ function COLORON()
 		color xterm16
 	endif
 	syn on
+        Brightness low
 endfunction
 
+" colors not automatically enabled for screen, underlying term may not handle
 if &term =~ 'xterm'
 	autocmd BufNewFile,BufReadPre,FileReadPre *.java call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.pl call COLORON()
@@ -45,7 +52,9 @@ if &term =~ 'xterm'
 	autocmd BufNewFile,BufReadPre,FileReadPre *.cc call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.cpp call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sh call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.py call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.xml call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.borg call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sql call COLORON()
 endif
 
