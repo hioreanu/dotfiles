@@ -1,31 +1,12 @@
-#if HEIGHT == 768
-#define GEOMETRY 85x28+0+0
-#elif HEIGHT == 864
-#define GEOMETRY 95x32+0+0
-#elif HEIGHT == 1024
-#define GEOMETRY 106x38+0+0
-#else
-#define GEOMETRY 80x24+0+0
-#endif
-
-xscreensaver.timeout: 60
-xscreensaver.cycle: 0
-xscreensaver.lockTimeout: 1
-xscreensaver.passwdTimeout: 10
-xscreensaver.nice: 1
-xscreensaver.lock: True
-xscreensaver.lockVTs: True
-xscreensaver.verbose: False
-xscreensaver.timestamp: False
-xscreensaver.fade: True
-xscreensaver.unfade: False
-xscreensaver.fadeSeconds: 3
-xscreensaver.fadeTicks: 20
-xscreensaver.splash: False
-xscreensaver.splashDuration: 0
-xscreensaver.captureStderr: True
-xscreensaver.installColormap: True
-xscreensaver.programs: /usr/X11R6/bin/phosphor -scale 1
+! #if HEIGHT == 768
+! #define GEOMETRY 85x28+0+0
+! #elsif HEIGHT == 864
+! #define GEOMETRY 95x32+0+0
+! #elif HEIGHT == 1024
+! #define GEOMETRY 106x38+0+0
+! #else
+! #define GEOMETRY 80x24+0+0
+! #endif
 
 emacs.pointerColor: white
 emacs.cursorColor: #909090
@@ -53,6 +34,37 @@ xterm.VT100.scrollKey: true
 XTerm*VT100.Translations: #override \
 <Key>BackSpace: string(0x7F)\n\
 <Key>Delete: string("\033[3~")\n\
+
+emacs.pointerColor: white
+emacs.cursorColor: #909090
+emacs.background: #000022
+emacs.foreground: #909090
+emacs.borderWidth: 0
+emacs.internalBorder: 0
+! emacs.font: 12x26-latin2
+! Emacs*font: Monospace-8
+Emacs*font: fixed
+emacs.geometry: GEOMETRY
+
+*backarrowKeyIsErase: false
+xscreensaver.timeout: 60
+xscreensaver.cycle: 0
+xscreensaver.lockTimeout: 1
+xscreensaver.passwdTimeout: 10
+xscreensaver.nice: 1
+xscreensaver.lock: True
+xscreensaver.lockVTs: True
+xscreensaver.verbose: False
+xscreensaver.timestamp: False
+xscreensaver.fade: True
+xscreensaver.unfade: False
+xscreensaver.fadeSeconds: 3
+xscreensaver.fadeTicks: 20
+xscreensaver.splash: False
+xscreensaver.splashDuration: 0
+xscreensaver.captureStderr: True
+xscreensaver.installColormap: True
+xscreensaver.programs: /usr/X11R6/bin/phosphor -scale 1
 
 Netscape*blinkingEnabled: False
 Netscape*dontSaveGeometryPrefs: True
