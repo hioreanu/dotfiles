@@ -355,6 +355,7 @@ after each command."
       gnus-select-method                '(nntp "uchinews")
       align-indent-before-aligning      t
       spook-phrases-file                "~/spook.lines"
+      smooth-scroll-margin              3
       widget-mouse-face                 'default
       gc-cons-threshold                 10000000
       show-paren-style                  'parenthesis)
@@ -370,10 +371,13 @@ after each command."
            nil)))
 
 (and (file-exists-p "~/.backups")
+     ; for older emacs versions
      (defun make-backup-file-name (file)
        (let ((backup (subst-char-in-string ?/ ?! (expand-file-name file)))
              (directory (expand-file-name "~/.backups/")))
-         (concat directory backup "~"))))
+         (concat directory backup "~")))
+     ; for emacs21 and above
+     (setq backup-directory-alist (list (cons "." "~/.backups"))))
 
 (setq system-identification
       (substring (system-name) 0
@@ -460,7 +464,7 @@ after each command."
 
 ;; Various functions, modes, etc.:
 
-; this variable contains statements to be run here:
+; statements to be run, ignoring errors:
 (setq init-stuff
       '((show-paren-mode t)
         (display-time)
@@ -479,7 +483,10 @@ after each command."
         (require 'sml-site)
         (mouse-avoidance-set-pointer-shape x-pointer-left-ptr)
         (toggle-uniquify-buffer-names)
-        (require 'saveplace)))
+        (require 'saveplace)
+        (require 'ido)
+        (ido-mode)
+        (require 'color-theme)))
 
 (defmacro error-encapsulate (arg)
   `(condition-case err
@@ -491,16 +498,20 @@ after each command."
 (if (not display-messages-buffer)
     (progn (setq message-log-max nil)
            (kill-buffer "*Messages*")))
+(setq axh-emacs-ver (number-to-string emacs-major-version))
 (setq custom-file
-      (concat "~/.emacs.d/custom-" (number-to-string emacs-major-version) ".el"))
+      (concat "~/.emacs.d/custom-" axh-emacs-ver ".el"))
 (mapcar (lambda (file) (and (file-exists-p file) (load-file file)))
-  '("~/src/my-info-bookmark.el"
-    "~/src/my-mutt-mode.el"
-    "~/src/caps-lock.el"
-    "~/src/emacs-packages/python-mode.el"
-    "~/src/emacs-packages/html-helper-mode.el"
-    "~/vm.elc"
-    "~/src/align.el"))
+        (list
+         "~/src/my-info-bookmark.el"
+         "~/src/my-mutt-mode.el"
+         "~/src/caps-lock.el"
+         "~/src/emacs-packages/python-mode.el"
+         "~/src/emacs-packages/html-helper-mode.el"
+         "~/vm.elc"
+         "~/src/align.el"
+         "~/.emacs.d/smooth-scrolling.el"
+         (concat "~/.emacs.d/emacs" axh-emacs-ver "-256color-hack.el")))
 (load custom-file)
 
 ; really bad terminal emulators emulate only vt100 or vt220, and poorly
@@ -611,11 +622,8 @@ at the end of your file."
   (define-key c-mode-base-map "/" 'axh-c-slash)
   (setq c-C++-protection-kwds "private\\|protected\\|public\\|signals\\|slots")
   (c-toggle-auto-hungry-state 1))
-(add-hook 'c-mode-common-hook 'axh-c-stuff)
-
-; FIXME: move into .emacs-local
-; tabs are the convention in NSIT's NSD group
-(add-hook 'java-mode-hook (lambda nil (setq indent-tabs-mode t)))
+; FIXME: disabled for now, need to integrate with google conventions
+; (add-hook 'c-mode-common-hook 'axh-c-stuff)
 
 ; FIXME:  asm-mode really sucks, need to rewrite it someday
 (defun axh-asm-newline ()
@@ -664,10 +672,10 @@ at the end of your file."
 (add-hook 'Info-mode-hook 'axh-info-stuff)
 
 (defun axh-view-mode-hook ()
-;  (local-set-key "j" 'go-down)
-;  (local-set-key "k" 'go-up)
-)
-(add-hook 'view-mode-hook 'axh-view-mode-hook)
+  (local-set-key "j" 'go-down)
+  (local-set-key "k" 'go-up))
+; FIXME: disabled pending fix
+;(add-hook 'view-mode-hook 'axh-view-mode-hook)
 
 (defun axh-mutt-mode-hook ()
   (fix-keys)
@@ -820,4 +828,3 @@ at the end of your file."
 ; C-x r k kill-rectangle
 ; C-M-/ debbrev-completion
 ; M-/ dabbrev-expand
-
