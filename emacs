@@ -168,6 +168,46 @@ Example:  (split \":\" \"/bin:/usr/bin:/usr/ucb\")
   (other-window 1)
   (delete-other-windows))
 
+;; from emacswiki/SwitchingWindows
+(defun switch-to-window-number (number)
+  "Switch to the nth window"
+  (interactive "P")
+  (if (integerp number)
+      (select-window (nth number (window-list)))))
+; (global-set-key "\C-cj" 'switch-to-window-number)
+
+(mapcar
+ (lambda (n)
+   (global-set-key (concat "\C-cj" (number-to-string n))
+                   (lambda nil (interactive) (switch-to-window-number n))))
+ '(1 2 3 4 5 6 7 8 9))
+
+;; from emacswiki
+(defun fullscreen (&optional f)
+  (interactive)
+  (set-frame-parameter f 'fullscreen
+                       (if (frame-parameter f 'fullscreen) nil 'fullboth)))
+(global-set-key [f11] 'fullscreen)
+(add-hook 'after-make-frame-functions 'fullscreen)
+
+(defun axh-dired-open-files (client-root)
+  "Open a dired buffer containing already-open files with a common prefix."
+  (interactive "D Common directory (eg: google3 client root): ")
+  (let ((list-of-files
+         (delete-if
+          'not
+          (mapcar (lambda (f)
+                    (string-replace-match client f ""))
+                  (delete-if
+                   'not
+                   (mapcar 'buffer-file-name
+                           (delete-if
+                            (lambda (b)
+                              (with-current-buffer
+                                  b buffer-read-only))
+                            (buffer-list))))))))
+    (dired (cons client list-of-files))))
+
 ; FIXME:  surely these must already exist under some other name?
 (defun shrink-list (len lst)
   (if (= len 0) nil
@@ -238,6 +278,22 @@ else use \"default-date-format\" as format string."
         (setq comment-end   (read-from-minibuffer "End comments with:  "))))
   (comment-region start end arg))
 
+; from: http://everything2.com/title/useful+emacs+lisp+functions
+(defun create-scratch-buffer nil
+  "create a new scratch buffer to work in. (could be *scratch* - *scratchX*)"
+  (interactive)
+  (let ((n 0)
+	bufname)
+    (while (progn
+	     (setq bufname (concat "*scratch"
+				   (if (= n 0) "" (int-to-string n))
+				   "*"))
+	     (setq n (1+ n))
+	     (get-buffer bufname)))
+    (switch-to-buffer (get-buffer-create bufname))
+    (if (= n 1) (lisp-interaction-mode)) ; 1, because n was incremented
+    ))
+
 ; The following based upon maniac.el, written by Per Abrahamsen in
 ; 1994, public domain
 ;; -- start maniac --
@@ -286,6 +342,7 @@ after each command."
 (global-set-key "\M-k" 'kill-buffer)
 (global-set-key "\M-z" 'go-up)
 (global-set-key "\C-z" 'go-down)
+(global-set-key "\C-x\C-^" 'enlarge-window)
 ;(global-set-key "\M-[" 'align)
 (global-set-key "\C-h a" 'apropos)
 (global-set-key [C-tab] 'dabbrev-expand)
@@ -294,6 +351,10 @@ after each command."
 (global-set-key [C-backspace] 'hungry-backspace)
 (global-set-key [?\C-=] (function (lambda () (interactive)
                                     (manual-entry (current-word)))))
+(global-set-key "\C-x2" (function (lambda () (interactive)
+                                    (split-window-vertically -14))))
+(global-set-key "\C-xi" (function (lambda() (interactive)
+                                    (other-window -1))))
 ; unbound: [?\C-`] M-o M-p M-s M-n M-[ M-] M-? M-+ M-_
 (global-set-key "\C-cw" 'compare-windows)
 (global-set-key "\C-cd" 'insert-date)
@@ -308,8 +369,10 @@ after each command."
 (global-set-key "\C-cx" 'kill-bottom-buffer-and-window)
 (global-set-key "\C-cm" 'apply-macro-to-region-lines)
 (global-set-key "\C-cc" 'caps-lock-mode)
+(global-set-key "\C-cb" 'bury-buffer)
 (global-set-key [?\s-s] 'ispell-buffer)
 (global-set-key "\C-cf" 'insert-ifdef)
+(global-set-key "\C-cs" 'sort-lines)
 (global-set-key [up] 'go-up)
 (global-set-key [down] 'go-down)
 
@@ -331,8 +394,10 @@ after each command."
       auto-save-timeout                 30
       require-final-newline             t
       search-highlight                  t
-      compilation-window-height         10
+      compilation-window-height         20
       compilation-ask-about-save        nil
+      compilation-scroll-output         t
+      eval-expression-print-length      1024
       inhibit-startup-message           t
       enable-local-eval                 t
       visible-bell                      t
@@ -345,7 +410,7 @@ after each command."
       file-name-handler-alist           nil ;get rid of ange-ftp
       default-major-mode                'text-mode
       ediff-window-setup-function       'ediff-setup-windows-plain
-      user-mail-address                 "hioreanu@uchicago.edu"
+      user-mail-address                 "hioreanu@gmail.com"
       delete-old-versions               t
       display-messages-buffer           t
       mouse-yank-at-point               t
@@ -358,7 +423,11 @@ after each command."
       smooth-scroll-margin              3
       widget-mouse-face                 'default
       gc-cons-threshold                 10000000
-      show-paren-style                  'parenthesis)
+      show-paren-style                  'parenthesis
+      mouse-wheel-scroll-amount         '(1 ((shift) . 5) ((control) . nil))
+      mwheel-scrool                     '(1 . 5)
+      org-log-done                      t
+      org-startup-folded                'showall)
 
 (setq load-path (cons "~/src/emacs-packages" load-path))
 (setq backup-disable-regexp  
@@ -386,15 +455,15 @@ after each command."
 (setq default-mode-line-format
       (list ""
             'mode-line-modified
-            "<"
-            (user-login-name)
-            "@"
-            'system-identification
-            "> "
-            "%14b"
+;            "<"
+;            (user-login-name)
+;            "@"
+;            'system-identification
+;            ">"
+            " %14b"
             " "
-            'display-time-string
-            " "
+;            'display-time-string
+;            " "
             "L%3l "
             "C%2c "
             '(-3 . "%P")
@@ -429,7 +498,7 @@ after each command."
 
 (setq-default transient-mark-mode       nil
               tab-width                 4
-              case-fold-search          nil
+              ; case-fold-search          nil
               indent-tabs-mode          nil
               save-place                t)
 
@@ -441,20 +510,17 @@ after each command."
 ;; (ensure you call emacs with "-bg black" or these looks bad)
 ;; (also, you can set it in Xdefaults, ie "emacs.background: black")
 
-(set-face-background 'modeline "darkgreen")
-(set-face-foreground 'modeline "darkgray")
-(set-face-background 'region   "darkgray")
-(set-face-foreground 'region   "lightgray")
-(set-face-background 'default  "black")
-(set-face-foreground 'default  "darkgray")
-(custom-set-faces 'show-paren-match-face 
-                  '((((class color)) (:background "black" 
-                                      :foreground "white"))
-                    (t (:background "gray"))))
-(custom-set-faces 'show-paren-mismatch-face
-                  '((((class color)) (:background "black" 
-                                      :foreground "red"))
-                    (t (:background "gray"))))
+;(set-face-background 'modeline "darkgreen")
+;(set-face-foreground 'modeline "darkgray")
+;(set-face-background 'region   "darkgray")
+;(set-face-foreground 'region   "lightgray")
+;(set-face-background 'default  "black")
+;(set-face-foreground 'default  "darkgray")
+;(custom-set-faces)
+;(custom-set-faces 'show-paren-mismatch-face
+;                  '((((class color)) (:background "black" 
+;                                      :foreground "red"))
+;                    (t (:background "gray"))))
 (if (in-path-p "xblink")
     (defun flash-screen ()
       (call-process "xblink" nil nil nil))
@@ -464,6 +530,14 @@ after each command."
 
 ;; Various functions, modes, etc.:
 
+(defun enable-ido ()
+  (progn
+    (and
+     (file-readable-p "~/.emacs.d/local-disk")
+     (setq ido-save-directory-list-file "~/.emacs.d/local-disk/ido.last"))
+    (require 'ido)
+    (ido-mode)))
+  
 ; statements to be run, ignoring errors:
 (setq init-stuff
       '((show-paren-mode t)
@@ -483,9 +557,8 @@ after each command."
         (require 'sml-site)
         (mouse-avoidance-set-pointer-shape x-pointer-left-ptr)
         (toggle-uniquify-buffer-names)
+        (enable-ido)
         (require 'saveplace)
-        (require 'ido)
-        (ido-mode)
         (require 'color-theme)))
 
 (defmacro error-encapsulate (arg)
@@ -511,6 +584,8 @@ after each command."
          "~/vm.elc"
          "~/src/align.el"
          "~/.emacs.d/smooth-scrolling.el"
+         "~/.emacs.d/highlight-80+.el"
+         "~/.emacs.d/multi-term.el"
          (concat "~/.emacs.d/emacs" axh-emacs-ver "-256color-hack.el")))
 (load custom-file)
 
@@ -624,6 +699,11 @@ at the end of your file."
   (c-toggle-auto-hungry-state 1))
 ; FIXME: disabled for now, need to integrate with google conventions
 ; (add-hook 'c-mode-common-hook 'axh-c-stuff)
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (setq sentence-end-double-space t)
+            (setq parens-require-spaces nil)
+            (setq fill-column 79)))
 
 ; FIXME:  asm-mode really sucks, need to rewrite it someday
 (defun axh-asm-newline ()
@@ -655,7 +735,7 @@ at the end of your file."
 (add-hook 'asm-mode-hook 'axh-asm-hook)
 
 (defun axh-textmode-stuff ()
-  (setq fill-column 71)
+  (setq fill-column 75)
   (setq sentence-end-double-space t))
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'text-mode-hook 'axh-textmode-stuff)
@@ -764,7 +844,7 @@ at the end of your file."
 
 ;; Execute machine-specific stuff:
 
-(cond ((string-match "VMWARE\\|C6N0L6\\|ALEX" system-identification) 
+(cond ((string-match "VMWARE\\|C6N0L6" system-identification) 
        (do-nt-stuff))
       ((string-match "greenscreen" system-identification)
        (do-home-stuff))
@@ -828,3 +908,6 @@ at the end of your file."
 ; C-x r k kill-rectangle
 ; C-M-/ debbrev-completion
 ; M-/ dabbrev-expand
+(custom-set-variables
+ '(load-home-init-file t t)
+ '(toolbar-visible-p nil))

@@ -6,11 +6,18 @@ attrcolor b ".I"
 termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 termcapinfo gnome-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# To get screen to add lines to xterm's scrollback buffer, uncomment the
+# following termcapinfo line which tells xterm to use the normal screen buffer
+# (which has scrollback), not the alternate screen buffer.
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
 # fix broken system "xterm" entry which specifies 16 colors (can do 256)
 # termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # termcapinfo gnome-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # defbce "on"
-source ${HOME}/.screenrc-local
 echo ""
+defscrollback 1000
+# logfile '/tmp/screenlogs/screenlog.%n'
+# deflog 'on'
+# log 'on'
 # shell '/bin/zsh'

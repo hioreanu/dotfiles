@@ -31,20 +31,11 @@ xterm.VT100.internalBorder: 0
 xterm.VT100.scrollKey: true
 !xterm.VT100.background: #FFFFFF
 !xterm.VT100.foreground: #010101
+XTerm*faceName: Monospace
+XTerm*faceSize: 14
 XTerm*VT100.Translations: #override \
 <Key>BackSpace: string(0x7F)\n\
 <Key>Delete: string("\033[3~")\n\
-
-emacs.pointerColor: white
-emacs.cursorColor: #909090
-emacs.background: #000022
-emacs.foreground: #909090
-emacs.borderWidth: 0
-emacs.internalBorder: 0
-! emacs.font: 12x26-latin2
-! Emacs*font: Monospace-8
-Emacs*font: fixed
-emacs.geometry: GEOMETRY
 
 *backarrowKeyIsErase: false
 xscreensaver.timeout: 60

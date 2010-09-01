@@ -1,5 +1,8 @@
 source ~/.exrc
 source ~/.vim/plugins/supertab.vim
+if filereadable($HOME . "/.vimrc-local")
+	source ~/.vimrc-local
+endif
 set nolist
 set et
 set ruler
@@ -13,6 +16,7 @@ set backspace=indent,eol,start
 vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 hi Search ctermbg=none
 hi Search cterm=inverse
+hi Search ctermfg=none
 
 " command-line mappings
 cnoremap <C-A> <Home>
