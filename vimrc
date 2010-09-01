@@ -24,6 +24,8 @@ let xterm16_colormap = 'soft'
 let xterm16bg_Normal = 'none'
 let xterm16_brightness = 'med'
 
+let os = substitute(system('uname'), "\n", "", "")
+
 function COLORON()
 	if &term =~ 'xterm' || &term =~ 'screen'
 		set t_Co=256
@@ -38,7 +40,8 @@ function COLORON()
 endfunction
 
 " colors not automatically enabled for screen, underlying term may not handle
-if &term =~ 'xterm'
+" Mac OS X Terminal.app can't handle the escape codes correctly.
+if &term =~ 'xterm' && os != "Darwin"
 	autocmd BufNewFile,BufReadPre,FileReadPre *.java call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.pl call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.pm call COLORON()
@@ -48,7 +51,7 @@ if &term =~ 'xterm'
 	autocmd BufNewFile,BufReadPre,FileReadPre *.cc call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.cpp call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sh call COLORON()
-	autocmd BufNewFile,BufReadPre,FileReadPre *.py call COLORON()
+    autocmd BufNewFile,BufReadPre,FileReadPre *.py call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.xml call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.borg call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sql call COLORON()
