@@ -105,6 +105,8 @@ setopt NO_NOMATCH
 setopt NO_PROMPT_CR
 # all xterms use the same history buffer
 # setopt SHARE_HISTORY
+# make var="x y" expand as two tokens, as standard Bourne shell
+setopt shwordsplit
 
 HISTSIZE=3000
 HISTFILE=~/.zsh_history
@@ -224,6 +226,7 @@ alias les=less
 alias elss=less
 alias lees=less
 alias Less=less
+alias kess=less
 alias jobs="builtin jobs -l"
 alias jbos="builtin jobs -l"
 alias wpd=pwd
@@ -246,6 +249,7 @@ alias ds='date +%Y%m%d'
 alias ws=ds
 if date --version > /dev/null 2>&1 ; then
 	alias ws='date -d "now - `date +%u` days + 1 day" +%Y%m%d'
+  alias yesterday='date +%Y%m%d -d yesterday'
 fi
 
 case "`uname -s`" in
@@ -287,6 +291,12 @@ loadsshagent() {
 	fi
 }
 
+avg() {
+  awk '{sum += $1} END { printf("%.2f\n", 1.0 * sum / NR) }'
+}
+counttok() {
+  perl -ne '{ chomp; $tok{$_}++ } END { for $t (keys(%tok)) { print "$t $tok{$t}\n" } }'
+}
 randsort() {
 	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
 	         print sort {rand() <=> rand()} <STDIN>;'
