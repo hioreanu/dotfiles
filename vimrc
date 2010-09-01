@@ -1,9 +1,5 @@
 source ~/.exrc
 source ~/.vim/plugins/supertab.vim
-" FIXME: move to vimrc.local
- 
-  
- 
 set nolist
 set et
 set ruler
