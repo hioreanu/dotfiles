@@ -114,20 +114,21 @@ SAVEHIST=3000
 unset MAILCHECK
 
 # /xc/doc/hardcopy/xterm/ctlseqs.PS.gz
+iconname="${hostname}"
 if [ -t 1 ] ; then
 	case $TERM in
 		*xterm*|rxvt|cygwin)
 			precmd() {
 				print -Pn "\e]2;${hostname}${WINDOWINDICATOR} %D{%H:%M:%S} - %n: %~\a"
-				print -Pn "\e]1;${hostname}\a"
+				print -Pn "\e]1;${iconname}\a"
 			}
 			screen() {
-				iconname="${hostname}"
 				while getopts :S: scropt ; do
 					[ "$scropt" = "S" ] && iconname="${OPTARG} ${hostname}"
 				done
 				print -Pn "\e]1;\{${iconname}\}\a"
 				command screen "$@"
+				iconname="${hostname}"
 			}
 			;;
 		sun-cmd)

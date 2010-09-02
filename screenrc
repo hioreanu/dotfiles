@@ -6,6 +6,12 @@ attrcolor b ".I"
 termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 termcapinfo gnome-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+<<<<<<< screenrc
+# To get screen to add lines to xterm's scrollback buffer, uncomment the
+# following termcapinfo line which tells xterm to use the normal screen buffer
+# (which has scrollback), not the alternate screen buffer.
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
+=======
 # To get screen to add lines to xterm's scrollback buffer, uncomment the
 # following termcapinfo line which tells xterm to use the normal screen buffer
 # (which has scrollback), not the alternate screen buffer.
@@ -14,10 +20,19 @@ termcapinfo xterm|xterms|xs|rxvt ti@:te@
 # termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 # termcapinfo gnome-256color 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+>>>>>>> 1.5
 # defbce "on"
 echo ""
+<<<<<<< screenrc
+defscrollback 1000
+# logfile '/tmp/screenlogs/screenlog.%n'
+# deflog 'on'
+# log 'on'
+shell '/bin/zsh'
+=======
 defscrollback 1000
 # logfile '/tmp/screenlogs/screenlog.%n'
 # deflog 'on'
 # log 'on'
 # shell '/bin/zsh'
+>>>>>>> 1.5
