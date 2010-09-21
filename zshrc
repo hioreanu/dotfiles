@@ -256,7 +256,7 @@ fi
 case "`uname -s`" in
 	Darwin)
 		export JAVA_HOME=/usr
-		if ps auxww | fgrep X11.app > /dev/null 2>&1 ; then
+		if [ -z "$DISPLAY" ] && ps auxww | fgrep X11.app > /dev/null 2>&1 ; then
 			export DISPLAY=:0.0
 			pathadd /usr/X11R6/bin append
 		fi
