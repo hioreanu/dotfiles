@@ -333,6 +333,7 @@ after each command."
 
 ;; global key bindings
 
+(global-set-key "\C-ha" 'apropos)
 (global-set-key "\C-ch" 'help)
 (global-set-key "\C-l" 'redraw-display)
 (global-set-key "\M-g" 'goto-line)
