@@ -78,7 +78,13 @@ case "$TERM" in
 	;;
 esac
 
+# Use Emacs style keybindings.
 bindkey -e
+# Remove [?&=/.;#] from word separators.
+WORDCHARS=${WORDCHARS//[?&=\/.;#]/}
+# Make C-f, C-b obey WORDCHARS.
+autoload -U select-word-style
+select-word-style normal
 
 # do not execute /etc/zlogout
 # GLOBAL_RCS introduced in zsh 3.1.6b; faster to check only first token
