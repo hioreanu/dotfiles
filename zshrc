@@ -85,6 +85,10 @@ WORDCHARS=${WORDCHARS//[?&=\/.;#]/}
 # Make C-f, C-b obey WORDCHARS.
 autoload -U select-word-style
 select-word-style normal
+# Make C-xe invoke vi.
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^Xe' edit-command-line
 
 # do not execute /etc/zlogout
 # GLOBAL_RCS introduced in zsh 3.1.6b; faster to check only first token
