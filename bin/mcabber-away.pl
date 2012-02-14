@@ -6,6 +6,7 @@ my $cmd = "dbus-monitor --session \"type='signal',interface='org.gnome.ScreenSav
 
 local *IN, *OUT;
 open(IN, "$cmd |");
+# TODO: should open verify is fifo, open fifo once, error out on write errors.
 # open(OUT, ">>${HOME}/mcabber.fifo");
 
 while (<IN>) {
