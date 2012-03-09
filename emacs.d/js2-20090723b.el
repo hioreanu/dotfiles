@@ -7709,7 +7709,7 @@ leaving a statement, an expression, or a function definition."
         (js2-compiler-xml-available (>= js2-language-version 160))
         ;; This is a recursive-descent parser, so give it a big stack.
         (max-lisp-eval-depth (max max-lisp-eval-depth 3000))
-        (max-specpdl-size (max max-specpdl-size 3000))
+        (max-specpdl-size (max max-specpdl-size 4000))
         (case-fold-search nil)
         ast)
     (or buf (setq buf (current-buffer)))

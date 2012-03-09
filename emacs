@@ -477,6 +477,11 @@ after each command."
             ")%]"
             "-%-"))
 
+(defun axh-js-mode ()
+  (cond ((fboundp 'js2-mode) (js2-mode))
+        ((fboundp 'javascript-mode) (javascript-mode))
+        (t (java-mode))))
+
 (setq auto-mode-alist
   (append '(("\\.CC$"  . c++-mode)
             ("\\.C$"   . c++-mode)
@@ -489,6 +494,7 @@ after each command."
             ("\\.c$"   . c-mode)
             ("\\.h$"   . c-mode)
             ("\\.x$"   . c-mode)        ; rpcgen
+            ("\\.js$"  . axh-js-mode)
             ("\\.m$"   . objc-mode) 
             ("\\.ml$"  . sml-mode)
             ("\\.cgi$" . perl-mode)
@@ -585,6 +591,7 @@ after each command."
          "~/vm.elc"
          "~/src/align.el"
          "~/.emacs.d/smooth-scrolling.el"
+         "~/.emacs.d/js2-20080616.elc"
          "~/.emacs.d/highlight-80+.el"
          "~/.emacs.d/multi-term.el"
          (concat "~/.emacs.d/emacs" axh-emacs-ver "-256color-hack.el")))
@@ -662,7 +669,7 @@ at the end of your file."
       'stop)))
 (defun axh-c-stuff ()
   (c-set-style "k&r")
-  (setq c-basic-offset                  4
+  (setq c-basic-offset                  2
 ;        c-comment-continuation-stars    "* "
 ;        c-block-comment-prefix          "* "
         c-electric-pound-behavior       '(alignleft)
@@ -887,8 +894,20 @@ at the end of your file."
   (setq show-trailing-whitespace 1)
   (tool-bar-mode -1))
 
+(when (string-match "Aquamacs" (emacs-version))
+  (setq ns-command-modifier 'meta
+        ns-alternate-modifier nil
+        ns-use-mac-modifier-symbols nil)
+  (tool-bar-mode -1)
+  (tabbar-mode 1)
+  (cua-mode nil)
+  (aquamacs-autoface-mode -1)
+  (setq-default cursor-type 'box))
+
 (and (file-readable-p (concat (getenv "HOME") "/.emacs-local"))
      (load-file (concat (getenv "HOME") "/.emacs-local")))
+
+(message "Finished!")
 
 ;; Start with a nice clean environment:
 

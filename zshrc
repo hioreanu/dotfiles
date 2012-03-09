@@ -319,6 +319,7 @@ randsort() {
 	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
 	         print sort {rand() <=> rand()} <STDIN>;'
 }
+shuffle() { perl -MList::Util -e 'print List::Util::shuffle <>' }
 audioplay=mpg123
 playm3u() {
 	randsort < "$1" | while read i ; do "$audioplay" "$i" ; done
