@@ -70,8 +70,8 @@ set record==Sent
 unset use_from
 set realname="Alex Hioreanu"
 my_hdr Return-Path: <hioreanu@gmail.com>
-my_hdr Return-Path: <hioreanu@gmail.com>
 my_hdr From: hioreanu@gmail.com
+unset signature
 set editor="vi"
 set pager_context=0
 set pager_stop

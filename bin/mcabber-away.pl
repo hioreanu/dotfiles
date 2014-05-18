@@ -5,7 +5,7 @@
 use IO::Handle;
 
 my $cmd = "dbus-monitor --session \"type='signal',interface='org.gnome.ScreenSaver',member='ActiveChanged'\"";
-my $fifo = "${HOME}/mcabber.fifo";
+my $fifo = "$HOME/mcabber.fifo";
 
 local *IN, *OUT;
 open(IN, "$cmd |") or die "$cmd: $!";
