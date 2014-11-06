@@ -1,7 +1,0 @@
-[X-GNOME-Metatheme]
-Name=ach-gnome-theme
-Type=X-GNOME-Metatheme
-Comment=Copied from Mist with different colors
-GtkTheme=ach-gnome-theme
-MetacityTheme=ach-gnome-theme
-IconTheme=Mist

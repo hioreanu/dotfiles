@@ -1,8 +1,0 @@
-#!/bin/sh
-# $Id$
-for i in `seq 1 254` ; do
-	host=$1.$i
-	echo -n "$host "
-	host $host 2>/dev/null | awk '{printf("%s", $5);}'
-	echo
-done
