@@ -112,6 +112,11 @@ identifier character."
         (delete-char 1)
         (insert "_" (downcase saved))))))
 
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer."
+  (interactive)
+  (message (buffer-file-name)))
+
 (defun map-macro (the-macro items)
   "Apply THE-MACRO to each item in ITEMS.
 (\\[mapcar] uses APPLY, which does not play nice with macros)."
@@ -374,6 +379,7 @@ after each command."
 (global-set-key [?\s-s] 'ispell-buffer)
 (global-set-key "\C-cf" 'insert-ifdef)
 (global-set-key "\C-cs" 'sort-lines)
+(global-set-key "\C-c?" 'show-file-name)
 (global-set-key [up] 'go-up)
 (global-set-key [down] 'go-down)
 
@@ -401,6 +407,8 @@ after each command."
       eval-expression-print-length      1024
       inhibit-startup-message           t
       enable-local-eval                 t
+      global-auto-revert-mode           t
+      Buffer-menu-buffer+size-width     45
       visible-bell                      t
       version-control                   t
       save-place-file                   "~/.places.sav"
@@ -410,12 +418,14 @@ after each command."
       next-line-add-newlines            nil
       file-name-handler-alist           nil ;get rid of ange-ftp
       default-major-mode                'text-mode
+      initial-major-mode                'text-mode
       ediff-window-setup-function       'ediff-setup-windows-plain
       user-mail-address                 "hioreanu@gmail.com"
       delete-old-versions               t
       display-messages-buffer           t
       mouse-yank-at-point               t
       tags-revert-without-query         t
+      initial-scratch-message           nil
       repeat-on-final-keystroke         t
       colon-double-space                t
       gnus-select-method                '(nntp "uchinews")
@@ -440,14 +450,16 @@ after each command."
              t
            nil)))
 
-(and (file-exists-p "~/.backups")
-     ; for older emacs versions
-     (defun make-backup-file-name (file)
-       (let ((backup (subst-char-in-string ?/ ?! (expand-file-name file)))
-             (directory (expand-file-name "~/.backups/")))
-         (concat directory backup "~")))
-     ; for emacs21 and above
-     (setq backup-directory-alist (list (cons "." "~/.backups"))))
+(defun set-backup-dir (dir)
+  (and (file-exists-p dir)
+       ; for older emacs versions
+       (defun make-backup-file-name (file)
+         (let ((backup (subst-char-in-string ?/ ?! (expand-file-name file)))
+               (directory (expand-file-name (concat dir "/"))))
+           (concat directory backup "~")))
+       ; for emacs21 and above
+       (setq backup-directory-alist (list (cons "." dir)))))
+(set-backup-dir "~/.backups")
 
 (setq system-identification
       (substring (system-name) 0
@@ -507,6 +519,7 @@ after each command."
               tab-width                 4
               ; case-fold-search          nil
               indent-tabs-mode          nil
+              ediff-auto-refine-limit   250000
               save-place                t)
 
 (put 'narrow-to-region 'disabled nil)

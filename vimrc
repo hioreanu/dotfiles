@@ -8,6 +8,7 @@ set et
 set ruler
 set notitle
 set clipboard=exclude:.*
+set pastetoggle=<F9>
 
 map! <f1> <esc>
 
@@ -17,6 +18,10 @@ vnoremap p <Esc>:let current_reg = @"<CR>gvs<C-R>=current_reg<CR><Esc>
 hi Search ctermbg=none
 hi Search cterm=inverse
 hi Search ctermfg=none
+
+" Q reflows paragraph (including comments); either current para, or v-selected.
+nnoremap Q gqap
+vnoremap Q gq
 
 " command-line mappings
 cnoremap <C-A> <Home>
@@ -40,12 +45,12 @@ function COLORON()
 		color xterm16
 	endif
 	syn on
-        Brightness low
+	Brightness med
 endfunction
 
 " colors not automatically enabled for screen, underlying term may not handle
 " Mac OS X Terminal.app can't handle the escape codes correctly.
-if &term =~ 'xterm' && os != "Darwin"
+if (&term =~ 'screen' || &term =~ 'xterm') && os != "Darwin"
 	autocmd BufNewFile,BufReadPre,FileReadPre *.java call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.pl call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.pm call COLORON()
@@ -55,10 +60,11 @@ if &term =~ 'xterm' && os != "Darwin"
 	autocmd BufNewFile,BufReadPre,FileReadPre *.cc call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.cpp call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sh call COLORON()
-    autocmd BufNewFile,BufReadPre,FileReadPre *.py call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.py call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.xml call COLORON()
-	autocmd BufNewFile,BufReadPre,FileReadPre *.borg call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sql call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.borg call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.proto call COLORON()
 endif
 
 if &t_Co > 2

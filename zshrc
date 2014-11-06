@@ -51,10 +51,10 @@ case "$TERM" in
 		stty echo
 	fi
 	if [ "$screenhost" = "$hostname" ] ; then
-		RPS1="#${hostname_esc}%S[%B${WINDOW}%b]%s %*"
+		RPS1="#${hostname_esc}%S[${WINDOW}]%s %*"
 		WINDOWINDICATOR="[${WINDOW}]"
 	else
-		RPS1="#${hostname_esc}%S${screenhost_esc}[%B${WINDOW}%b]%s %*"
+		RPS1="#${hostname_esc}%S${screenhost_esc}[${WINDOW}]%s %*"
 		WINDOWINDICATOR="[${screenhost} ${WINDOW}]"
 	fi
 	# moved to preexec for all-xterms-in-screen
@@ -154,11 +154,14 @@ persttitle() {
 }
 
 UA_IPHONE4='Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7'
+UA_IPHONE5='Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3'
+UA_ANDROID="Mozilla/5.0 (Linux; U; Android 2.1; en-us; Nexus One Build/ERD62) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17"
 
 EDITOR=vi
 VISUAL=$EDITOR
 LC_COLLATE=C
 LESS="-f -M -e -g -i -X"
+LESSEDIT=/bin/true
 PAGER=less
 CVS_RSH=ssh
 CVSEDITOR=vi
@@ -241,6 +244,7 @@ pathadd "$HOME/bin" "prepend"
 unalias -m '*'
 alias les=less
 alias ess=less
+alias els=less
 alias elss=less
 alias lees=less
 alias Less=less
@@ -248,6 +252,7 @@ alias kess=less
 alias jobs="builtin jobs -l"
 alias jbos="builtin jobs -l"
 alias wpd=pwd
+alias wdp=pwd
 alias pdw=pwd
 alias maek=make
 alias amke=make
@@ -265,6 +270,7 @@ alias sudosh='sudo /bin/sh -c "`fc -ln -1`"'
 alias dt='date +%Y%m%dT%H%M%S'
 alias ds='date +%Y%m%d'
 alias ws=ds
+alias vip='vim --cmd "set paste"'
 if date --version > /dev/null 2>&1 ; then
 	alias ws='date -d "now - `date +%u` days + 1 day" +%Y%m%d'
   alias yesterday='date +%Y%m%d -d yesterday'
@@ -309,8 +315,14 @@ loadsshagent() {
 	fi
 }
 
+ml() {
+  perl -e 'print "\e[7m", " " x '$COLUMNS', "\e[0m";'
+}
 avg() {
   awk '{sum += $1} END { printf("%.2f\n", 1.0 * sum / NR) }'
+}
+total() {
+  awk '{sum += $1} END { printf("%.2f\n", sum) }'
 }
 counttok() {
   perl -ne '{ chomp; $tok{$_}++ } END { for $t (keys(%tok)) { print "$t $tok{$t}\n" } }'
@@ -355,13 +367,27 @@ timecommand() {
 		sleep 1
 	done
 }
+testimage() {
+  size=$1
+  color=${2:-black}
+  text=${3:-Test}
+  output=${4:-/tmp/testimage.png}
+  convert -size "${size}" -background "${color}" "label:${text}" "${output}"
+}
 texwc() {
 	perl -pe 's/%.*//g; s/\\(begin|end){\w*}//g; s/\\\w*//g;' "$@" | wc -w
 }
 tcpgrep() {
 	tcpdump -p -X -n -q -s 8192 dst port $1 or src port $1
 }
-
+e2d() {
+  value="$1"
+  if [[ $value -gt 4294967295 ]] ; then
+    echo "Assuming date is epoch in microseconds" >&2
+    value=$(( $value / 1000000 ))
+  fi
+  date -d "@$value"
+}
 if [ -d ~/nsmail ] ; then rm -rf ~/nsmail ; fi
 if [ "$UID" = "0" ] ; then
 	umask 022
