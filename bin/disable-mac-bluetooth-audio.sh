@@ -29,7 +29,7 @@ if echo ${bluetoothdev} | fgrep -i -q Bluetooth ; then
   echo "Bluetooth is on."
 else
   echo "Bluetooth is already off."
-  echo ${bluetoothdev}
+  # The check is not reliable so we go ahead.
   # exit 0
 fi
 
