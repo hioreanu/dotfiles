@@ -3,6 +3,9 @@
 # default device.  This is used as a cron job on my media Mac to free up
 # Bluetooth speakers for phone connections.
 
+# Requires root access.
+test $(id -u) -eq 0 || exit 1
+
 TMPFILE=$(mktemp /tmp/bluetoothaudio.XXXXXX)
 export TMPFILE
 cleantmp() {
@@ -18,7 +21,7 @@ trap cleantmp 0
 
 defaults read /Library/Preferences/Audio/com.apple.audio.SystemSettings 501 > ${TMPFILE}
 
-bluetoothdev=$(egrep 'current default output device' ${TMPFILE} | sed 's/.*= //;s/;$//')
+bluetoothdev=$(egrep 'current default output device' ${TMPFILE} | sed 's/.*= //;s/;$//;s/"//g')
 
 # First, determine whether audio is bluetooth or not.
 
@@ -26,16 +29,17 @@ if echo ${bluetoothdev} | fgrep -i -q Bluetooth ; then
   echo "Bluetooth is on."
 else
   echo "Bluetooth is already off."
-  exit 0
+  echo ${bluetoothdev}
+  # exit 0
 fi
 
 # Next, copy the default audio input to the default output.  We assume
 # that the bluetooth device does not have an audio input (they're just
 # speakers).
 
-outputdev=$(egrep 'current default input device' ${TMPFILE} | sed 's/.*= //;s/;$//')
+outputdev=$(egrep 'current default input device' ${TMPFILE} | sed 's/.*= //;s/;$//;s/"//g')
 
-sudo defaults write /Library/Preferences/Audio/com.apple.audio.SystemSettings 501 -dict \
+defaults write /Library/Preferences/Audio/com.apple.audio.SystemSettings 501 -dict \
     "current default input device" -string ${outputdev} \
     "current default output device" -string ${outputdev} \
     "current default system output device" -string ${outputdev} \
@@ -44,3 +48,7 @@ sudo defaults write /Library/Preferences/Audio/com.apple.audio.SystemSettings 50
     "primary default system output device" -string ${outputdev} \
     "secondary default output device" -string ${bluetoothdev} \
     "secondary default system output device" -string ${bluetoothdev}
+
+# Restart the audio subsystem, to have it recognize the new preferences.
+launchctl stop com.apple.audio.coreaudiod
+launchctl start com.apple.audio.coreaudiod
