@@ -15,15 +15,12 @@ trap cleantmp 0
 # interface on and off via the user-interface.  Since the data includes
 # a constant and fixed strings, it's likely OS version-specific and could
 # even be machine-specific.
+
 defaults read /Library/Preferences/Audio/com.apple.audio.SystemSettings 501 > ${TMPFILE}
 
-outputdev=$(egrep 'current default input device' ${TMPFILE} | sed 's/.*= //;s/;$//')
 bluetoothdev=$(egrep 'current default output device' ${TMPFILE} | sed 's/.*= //;s/;$//')
 
-echo outputdev = ${outputdev}
-echo bluetoothdev = ${bluetoothdev}
-
-# First, determine whether audio is bluetooth of not.
+# First, determine whether audio is bluetooth or not.
 
 if echo ${bluetoothdev} | fgrep -i -q Bluetooth ; then
   echo "Bluetooth is on."
@@ -35,3 +32,15 @@ fi
 # Next, copy the default audio input to the default output.  We assume
 # that the bluetooth device does not have an audio input (they're just
 # speakers).
+
+outputdev=$(egrep 'current default input device' ${TMPFILE} | sed 's/.*= //;s/;$//')
+
+sudo defaults write /Library/Preferences/Audio/com.apple.audio.SystemSettings 501 -dict \
+    "current default input device" -string ${outputdev} \
+    "current default output device" -string ${outputdev} \
+    "current default system output device" -string ${outputdev} \
+    "primary default input device" -string ${outputdev} \
+    "primary default output device" -string ${outputdev} \
+    "primary default system output device" -string ${outputdev} \
+    "secondary default output device" -string ${bluetoothdev} \
+    "secondary default system output device" -string ${bluetoothdev}
