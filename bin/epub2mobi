@@ -1,0 +1,9 @@
+#!/bin/sh
+
+epub2mobi() {
+  if [ $# -ne 2 ] ; then
+    echo "usage: epub2mobi file.epub file.mobi"
+    return
+  fi
+  /Applications/calibre.app/Contents/MacOS/ebook-convert "$1" "$2" --input-profile=sony --output-profile=kindle
+}
