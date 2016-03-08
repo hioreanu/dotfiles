@@ -1,0 +1,13 @@
+#!/bin/sh
+
+epub2mobi() {
+  if [ $# -ne 1 ] ; then
+    echo "usage: epub2mobi file.epub"
+    echo "Creates file.mobi."
+    return
+  fi
+  output="$(basename "$1" .epub).mobi"
+  /Applications/calibre.app/Contents/MacOS/ebook-convert "$1" "$output" --input-profile=sony --output-profile=kindle
+}
+
+epub2mobi "$1"
