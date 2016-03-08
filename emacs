@@ -569,7 +569,7 @@ after each command."
         (column-number-mode 1)
         (scroll-bar-mode -1)
         (menu-bar-mode 0)
-        (tool-bar-mode nil)
+        (tool-bar-mode 0)
         (blink-cursor-mode nil) ; emacs 22
         (font-lock-mode 0)
         (iswitchb-default-keybindings)
@@ -608,7 +608,7 @@ after each command."
          "~/.emacs.d/highlight-80+.el"
          "~/.emacs.d/multi-term.el"
          (concat "~/.emacs.d/emacs" axh-emacs-ver "-256color-hack.el")))
-(load custom-file)
+(if (file-exists-p custom-file) (load custom-file))
 
 ; really bad terminal emulators emulate only vt100 or vt220, and poorly
 (if (and (not window-system) 

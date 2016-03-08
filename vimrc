@@ -63,9 +63,10 @@ if (&term =~ 'screen' || &term =~ 'xterm') && os != "Darwin"
 	autocmd BufNewFile,BufReadPre,FileReadPre *.py call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.xml call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.sql call COLORON()
-	autocmd BufNewFile,BufReadPre,FileReadPre *.borg call COLORON()
 	autocmd BufNewFile,BufReadPre,FileReadPre *.proto call COLORON()
+	autocmd BufNewFile,BufReadPre,FileReadPre *.go call COLORON()
 endif
+autocmd BufNewFile,BufReadPre,FileReadPre *.go setlocal noexpandtab
 
 if &t_Co > 2
 	syntax on
