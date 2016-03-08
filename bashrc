@@ -5,7 +5,7 @@
 # xdm sources this in posix mode, breaks things later on:
 set +o posix
 set -ab
-set +u
+# set +u
 
 if [ -z "$PATH" ] ; then
 	PATH="/bin:/usr/bin"
