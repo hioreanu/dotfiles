@@ -7,7 +7,7 @@ print "Started\n";
 use IO::Handle;
 
 my $cmd = "dbus-monitor --session \"type='signal',interface='org.cinnamon.ScreenSaver',member='ActiveChanged'\"";
-my $fifo = "/usr/local/google/home/axh/mcabber.fifo";
+my $fifo = "/tmp/mcabber.fifo";
 
 local *IN, *OUT;
 open(IN, "$cmd |") or die "$cmd: $!";
