@@ -489,11 +489,6 @@ after each command."
             ")%]"
             "-%-"))
 
-(defun axh-js-mode ()
-  (cond ((fboundp 'js2-mode) (js2-mode))
-        ((fboundp 'javascript-mode) (javascript-mode))
-        (t (java-mode))))
-
 (setq auto-mode-alist
   (append '(("\\.CC$"  . c++-mode)
             ("\\.C$"   . c++-mode)
@@ -506,7 +501,6 @@ after each command."
             ("\\.c$"   . c-mode)
             ("\\.h$"   . c-mode)
             ("\\.x$"   . c-mode)        ; rpcgen
-            ("\\.js$"  . axh-js-mode)
             ("\\.m$"   . objc-mode) 
             ("\\.ml$"  . sml-mode)
             ("\\.cgi$" . perl-mode)
@@ -604,7 +598,6 @@ after each command."
          "~/vm.elc"
          "~/src/align.el"
          "~/.emacs.d/smooth-scrolling.el"
-         "~/.emacs.d/js2-20080616.elc"
          "~/.emacs.d/highlight-80+.el"
          "~/.emacs.d/multi-term.el"
          (concat "~/.emacs.d/emacs" axh-emacs-ver "-256color-hack.el")))
