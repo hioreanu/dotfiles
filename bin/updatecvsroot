@@ -1,8 +1,0 @@
-#!/bin/sh
-newroot="`cat CVS/Root`"
-export newroot
-find . -type d -a -name CVS -print | while read dir ; do
-  if [ -e "${dir}/Root" ] ; then
-    echo "${newroot}" > "${dir}/Root"
-  fi
-done

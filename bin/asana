@@ -1,3 +1,0 @@
-#!/bin/sh
-
-mail -a "From: hioreanu+asana@gmail.com" -a "To: x@mail.asana.com" -b hioreanu@gmail.com -s "$*" x@mail.asana.com

@@ -1,1 +1,0 @@
-text/html; links -dump -force-html %s; needsterminal; copiousoutput
