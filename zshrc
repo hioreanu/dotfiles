@@ -220,7 +220,6 @@ pathadd() {
 
 pathdel '.'
 
-
 for i in /opt/*/bin ; do pathadd $i "append" ; done
 for i in /usr/local/*/bin ; do pathadd $i "prepend" ; done
 pathadd /usr/local/bin "prepend"
@@ -273,7 +272,7 @@ alias ws=ds
 alias vip='vim --cmd "set paste"'
 if date --version > /dev/null 2>&1 ; then
 	alias ws='date -d "now - `date +%u` days + 1 day" +%Y%m%d'
-  alias yesterday='date +%Y%m%d -d yesterday'
+	alias yesterday='date +%Y%m%d -d yesterday'
 fi
 
 case "`uname -s`" in
@@ -302,93 +301,6 @@ case "`uname -s`" in
 		;;
 esac
 
-loadsshagent() {
-	# requires pgrep; so far works on boxes where this is used
-	if [ -f "$HOME/.ssh/id_dsa.pub" -a -z "$SSH_AGENT_PID" ] ; then
-		SSH_AGENT_PID="`pgrep -f ssh-agent`"
-		if [ -z "$SSH_AGENT_PID" ] ; then
-			eval `ssh-agent` > /dev/null 2>&1
-		else
-			SSH_AUTH_SOCK="`ls -t /tmp/ssh-*/agent.* | head -n 1`"
-		fi
-		export SSH_AGENT_PID SSH_AUTH_SOCK
-	fi
-}
-
-ml() {
-  perl -e 'print "\e[7m", " " x '$COLUMNS', "\e[0m";'
-}
-avg() {
-  awk '{sum += $1} END { printf("%.2f\n", 1.0 * sum / NR) }'
-}
-total() {
-  awk '{sum += $1} END { printf("%.2f\n", sum) }'
-}
-counttok() {
-  perl -ne '{ chomp; $tok{$_}++ } END { for $t (keys(%tok)) { print "$t $tok{$t}\n" } }'
-}
-randsort() {
-	perl -e 'srand(time() ^ ($$ + ($$ << 15)));
-	         print sort {rand() <=> rand()} <STDIN>;'
-}
-shuffle() { perl -MList::Util -e 'print List::Util::shuffle <>' }
-audioplay=mpg123
-playm3u() {
-	randsort < "$1" | while read i ; do "$audioplay" "$i" ; done
-}
-megs() {
-	ls -la "$@" | awk '{x += $5} END { printf("%.2f\n", (x / 1048576)) }'
-}
-dirs() {
-	# follows symlinks, prints dot-dirs
-	ls -A "$@" | while read i ; do [ -d $i ] && echo $i ; done
-}
-recurse() { # DFS
-	dirs | while read DIR ; do
-		"$@"
-		cd "$DIR"
-		recurse "$@"
-		cd ..
-	done
-}
-empty() {
-	ls -lag "$@" | awk '$5 == 0 {print $9}'
-}
-dirsizes() {
-	du -s `dirs` \
-	| sort -nr \
-	| awk '{print $2}' \
-	| xargs du -sh
-}
-timecommand() {
-	clear 
-	while true ; do 
-		printf "\r%s" "`date +"%T"`"
-		sleep 1
-	done
-}
-testimage() {
-  size=$1
-  color=${2:-black}
-  text=${3:-Test}
-  output=${4:-/tmp/testimage.png}
-  convert -size "${size}" -background "${color}" "label:${text}" "${output}"
-}
-texwc() {
-	perl -pe 's/%.*//g; s/\\(begin|end){\w*}//g; s/\\\w*//g;' "$@" | wc -w
-}
-tcpgrep() {
-	tcpdump -p -X -n -q -s 8192 dst port $1 or src port $1
-}
-e2d() {
-  value="$1"
-  if [[ $value -gt 4294967295 ]] ; then
-    echo "Assuming date is epoch in microseconds" >&2
-    value=$(( $value / 1000000 ))
-  fi
-  date -d "@$value"
-}
-if [ -d ~/nsmail ] ; then rm -rf ~/nsmail ; fi
 if [ "$UID" = "0" ] ; then
 	umask 022
 else
@@ -401,7 +313,3 @@ fi
 if [ "$benchmark" = "yes" ] ; then
 	echo Startup time: $(((`date +%s%N` - $zshstart) / 1000000))ms
 fi
-
-
-# Added by Antigravity CLI installer
-export PATH="/Users/hioreanu/.local/bin:$PATH"

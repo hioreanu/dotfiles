@@ -238,7 +238,3 @@ fi
 if [ -e ~/.bash-local ] ; then
 	. ~/.bash-local
 fi
-
-
-# Added by Antigravity CLI installer
-export PATH="/Users/hioreanu/.local/bin:$PATH"
