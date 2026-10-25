@@ -401,3 +401,7 @@ fi
 if [ "$benchmark" = "yes" ] ; then
 	echo Startup time: $(((`date +%s%N` - $zshstart) / 1000000))ms
 fi
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/hioreanu/.local/bin:$PATH"
